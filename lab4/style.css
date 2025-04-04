@@ -1,0 +1,77 @@
+.shadow1{
+    text-shadow: 10px 0 2px red;
+}
+
+.shadow2{
+    text-shadow: 10px 0 2px red;
+}
+
+.shadow3{
+    text-shadow: 10px 0 2px red;
+}
+
+.shadow4{
+    text-shadow: 10px 0 2px red;
+}
+
+.shadow5{
+    text-shadow: 10px 0 2px red;
+}
+
+.shadow6{
+    text-shadow: 10px 0 2px red;
+}
+
+
+.radiusbox1, .radiusbox2, .radiusbox3, .radiusbox4, .radiusbox5{
+    width: 150px;
+    height: 150px;
+    background-color: chartreuse;
+    margin: 30px;
+    padding: 20px;
+}
+
+.radiusbox1{
+    border-radius: 20px;
+}
+
+.radiusbox2{
+    border-radius: 100px / 50px;
+}
+
+.radiusbox3{
+    border-radius: 30px 10px 50px 20px;
+}
+
+.radiusbox4{
+    border-radius: 50%;
+}
+
+.radiusbox5{
+    border-radius: 50%;
+}
+
+.img{
+    width: 100%;
+    border-radius: 50px;
+}
+
+figcaption{
+    margin-top: 15px;
+}
+
+.blur1{
+    filter: blur(1px);
+}
+
+.blur1:hover{
+    filter: blur(0px);
+}
+
+.blur2{
+    filter: blur(5px);
+}
+
+.blur3{
+    filter: blur(10px);
+}
