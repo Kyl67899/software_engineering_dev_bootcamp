@@ -75,3 +75,63 @@ figcaption{
 .blur3{
     filter: blur(10px);
 }
+
+/* static layout */
+.maincontainer{
+    border: 2px solid gray;
+    width: 800px;
+    margin: auto;
+}
+
+.leftcolumn{
+    background-color: aliceblue;
+    width: 500px;
+    height: 400px;
+}
+
+.section .article{
+    border: 1px solid darkblue;
+
+}
+
+.rightcolumn{
+    max-width: 29.8%; /* 298px for static */
+    height: 400px;
+    border: 1px solid red;
+}
+
+.images{
+    width: 100%; /* 800px for static */
+}
+
+.cardcontainer{
+    width: 800px;
+    margin: auto;
+    background-color: aliceblue;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.card{
+    width: 32%;
+    border-radius: 20px;
+    border: 2px solid red;
+    overflow: hidden;
+
+}
+
+.linkcard{
+    text-align: center;
+    display: block;
+    color: darkblue;
+    text-decoration: none;
+    padding: 1em;
+    background-color: white;
+}
+
+.card:hover{
+    box-shadow: 0px 0px 3px 2px gray;
+    transform: translate(0px, -10px);
+}
