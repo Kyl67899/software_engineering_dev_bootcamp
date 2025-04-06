@@ -90,7 +90,6 @@ figcaption{
 
 .section .article{
     border: 1px solid darkblue;
-
 }
 
 .rightcolumn{
@@ -102,6 +101,8 @@ figcaption{
 .images{
     width: 100%; /* 800px for static */
 }
+
+/* card */
 
 .cardcontainer{
     width: 800px;
@@ -119,6 +120,20 @@ figcaption{
     border: 2px solid red;
     overflow: hidden;
 }
+
+.imgCard {
+    width: 100%;
+}
+
+.card1, .card2, .card3{
+    height: 218px;
+}
+
+.card4{
+    height: 322px;
+}
+
+/* card */
 
 .linkcard{
     text-align: center;
