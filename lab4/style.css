@@ -22,7 +22,6 @@
     text-shadow: 10px 0 2px red;
 }
 
-
 .radiusbox1, .radiusbox2, .radiusbox3, .radiusbox4, .radiusbox5{
     width: 150px;
     height: 150px;
@@ -119,7 +118,6 @@ figcaption{
     border-radius: 20px;
     border: 2px solid red;
     overflow: hidden;
-
 }
 
 .linkcard{
@@ -134,4 +132,153 @@ figcaption{
 .card:hover{
     box-shadow: 0px 0px 3px 2px gray;
     transform: translate(0px, -10px);
+}
+
+/* positions */
+.imgcontainer{
+    width: 50%;
+    box-shadow: 2px 2px 5px #D2641E;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    top: 20px;
+    bottom: 20px;
+    left: 100px;
+    right: 100px;
+}
+
+.imgtitle{
+    background-color: rgb(120, 20, 150);
+    position: absolute;
+    /* inset: 90px 20px 90px 20px; */
+    top: 90px;
+    bottom: 468px;
+    right: 20px;
+    left: 20px;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+.fixedtabs{
+    text-align: center;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+}
+
+.navhorizontal{
+    color: orangered;
+}
+
+.navhorizontal a{
+    background-color: red;
+    color: whitesmoke;
+    text-decoration: none;
+    display: inline-block;
+    width: 24.8%;
+    text-align: center;
+    padding: 20px;
+}
+
+.navhorizontal a:hover{
+    background-color: black;
+    font-weight: bolder;
+    text-decoration: underline;
+}
+
+.rgbcontainer, .hexcontainer{
+    border: 1px solid gray;
+    display: flex;
+    justify-content: space-around;
+}
+
+/* background image doesnt really work for mac  */ 
+.imgbackground, .imgbackground2{
+    display: flex;
+    justify-content: space-around;
+}
+
+.imgbackground div, .imgbackground2 div{
+    width: 30%;
+    height: 200px;
+    border: 2px solid gray;
+}
+
+.imgbackground div:nth-child(1){
+    background-image: linear-gradient(red, darkblue);
+}
+
+.imgbackground div:nth-child(2){
+    background-image: linear-gradient(to left red, darkblue);
+}
+
+.imgbackground div:nth-child(3){
+    background-image: linear-gradient(to left bottom red, darkblue);
+}
+
+.imgbackground2 div:nth-child(1){
+    background-image: linear-gradient(to right red, darkblue);
+}
+
+.imgbackground2 div:nth-child(2){
+    background-image: linear-gradient(to bottom red, yellow);
+}
+
+.imgbackground2 div:nth-child(3){
+    background-image: linear-gradient(to left bottom red 20%, yellow, purple 40%);
+}
+
+.heroimgcontainer{
+    width: 50%;
+    height: 500px;
+    margin: auto;
+    border: 1px solid gray;
+    background-image: linear-gradient(rgba(255, 0, 0, 0.6), #000000), url("./images/imageq.jpg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.herocontent{
+    background-color: rgba(50, 50, 50, 0.8);
+    position: absolute;
+    bottom: 5%;
+    left: 10%;
+    right: 10%;
+    color: white;
+    border-radius: 10px;
+    border-radius: 1px 1px 1px 5px black;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.5em;
+}
+
+.herocontent_title{
+    color: rgba(220, 200, 200, 0.9);
+}
+
+.herocontent_intro{
+    margin-top: -30px;
+    font-size: 0.8em;
+    font-style: italic;
+}
+
+.herocontent_link{
+    background-color: darkblue;
+    color: white;
+    display: block;
+    padding: 1em;
+}
+
+.herocontent_link:hover{
+    background-color: rgba(220, 200, 200, 0.9);
+    color: crimson;
+    font-weight: bolder;
 }
