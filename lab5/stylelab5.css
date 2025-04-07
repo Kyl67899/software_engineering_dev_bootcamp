@@ -1,0 +1,92 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+img{
+    width: 100%;
+    display: block;
+}
+
+.square_circle {
+  width: 100px;
+  height: 100px;
+  background-color: purple;
+  transition: ease-in-out 2s;
+}
+
+.square_circle:hover {
+  border-radius: 50%;
+  background-color: aqua;
+}
+
+/* zoom effect */
+.zoomcontainer, .slidecontainer{
+    width: 500px;
+    position: relative;
+}
+
+.zoomcontent, .slidecontent{
+    position: absolute;
+    top: 0%;
+    bottom: 0%;
+    left: 0%;
+    right: 0%;
+    background-color: rgba(50, 50, 50, 0.7);
+    text-align: center;
+    padding-top: 30%;
+    color: white;
+    font-size: 3em;
+    transition: ease-in-out 1s;
+}
+
+/* .zoomcontent{
+    transform: scale(0);
+} */
+
+.zoomcontainer:hover .zoomcontent{
+    transform: scale(1);
+}
+
+.slidecontent{
+    transform: translateX(500px);
+}
+
+.slidecontainer{
+    overflow: hidden;
+}
+
+.slidecontainer:hover .slidecontent{
+    transform: translateX(0px);
+}
+
+.card, .cardslide{
+    width: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 1px 1px 5px black;
+    transition: ease-in-out 800ms;
+}
+
+.cardslide{
+    width: 300px;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 1px 1px 5px black;
+    transition: ease-in-out 800ms;
+}
+
+.card:hover{
+    transform: scale(0.95);
+    box-shadow: none;
+}
+
+.cardslide:hover{
+    transform: scale(-10px);
+    box-shadow: 0px 5px 5px black;
+}
+
