@@ -179,6 +179,22 @@ img{
     color: aliceblue;
 }
 
+.navcontainer{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: rgba(217, 182, 29, 0.5);
+    position: fixed;
+    top: 0%;
+}
+
+.navlink{
+    text-align: center;
+    padding: 1rem;
+    display: inline-block;
+    color: white;
+}
+
 /* media quries */
 
 @media only screen and (max-width: 1150px){
@@ -188,6 +204,7 @@ img{
     .cardslides{
         width: 500px;
     }
+
 }
 
 @media only screen and (max-width: 800px){
@@ -204,22 +221,9 @@ img{
 
     .collapsenavbars{
         display: inline-block;
-        padding: 1rem;
     }
-}
 
-.navcontainer{
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    background-color: rgba(red, green, blue, 0.5);
-    position: fixed;
-    top: 0%;
-}
-
-.navlink{
-    text-align: center;
-    padding: 1rem;
-    display: inline-block;
-    color: white;
+    .navlink{
+        display: none;
+    }
 }
