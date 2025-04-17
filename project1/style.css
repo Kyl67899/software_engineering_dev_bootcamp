@@ -13,10 +13,17 @@ html {
   scroll-behavior: smooth;
 }
 
-img {
+/* images */
+
+.img {
   width: 100%;
   display: block;
+  border-radius: 50%;
 }
+
+
+
+/* images */
 
 /* General Styling */
 body {
@@ -90,3 +97,6 @@ a {
 .btn:hover{
   background-color: var(--secondary-color);
 }
+
+/* Home section */
+
