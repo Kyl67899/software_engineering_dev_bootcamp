@@ -16,12 +16,10 @@ html {
 /* images */
 
 .img {
-  width: 100%;
+  width: 500px;
   display: block;
-  border-radius: 50%;
+  border-radius: 15px;
 }
-
-
 
 /* images */
 
@@ -88,15 +86,42 @@ a {
 }
 
 /* btn */
-.btn{
+.butn{
   background-color: var(--text-color);
   color: var(--background-color);
   padding: 20px;
 }
 
-.btn:hover{
+.butn a{
+  text-decoration: none;
+}
+
+.butn:hover{
   background-color: var(--secondary-color);
 }
 
 /* Home section */
+.text{
+  margin: auto;
+  text-align: left;
+}
 
+.text-1{
+  text-align: left;
+}
+
+/* icon */
+
+.icon{
+  display: flex;
+  font-size: 28px;
+}
+
+.icon_lang{
+  font-size: 30px;
+  padding-left: 5px;
+}
+
+.name{
+  color: var(--secondary-color);
+}
