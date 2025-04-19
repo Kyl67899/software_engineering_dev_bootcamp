@@ -103,6 +103,14 @@ a {
   transition: all 0.3s ease;
 }
 
+.btns{
+  display: flex;
+  width: 150px;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;  
+}
+
 .butn a {
   text-decoration: none;
 }
@@ -285,7 +293,7 @@ a {
     text-decoration: none;
   }
 
-  .btns {
-    width: 200px;
+  .btns{
+    width: 150px;
   }
 }
