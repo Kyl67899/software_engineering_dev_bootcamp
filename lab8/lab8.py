@@ -16,7 +16,7 @@ print(f"Data type of false: {type(False)}")
 print(f"------- Example 3: variables ------- ")
 #declare variables
 num1 = 25.5
-num2 = -21
+num2 = -22
 user_name = "joe scam"
 add_num = num1 + num2
 print(f"{user_name} has {add_num} ")
