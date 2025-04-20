@@ -14,33 +14,41 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="nav2">
-        <!-- Header -->
-        <header class="header2" id="home">
-            <div class="title">
-                <h1>
-                    Kyle's Porfolio
-                </h1>
-            </div>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
+    <header class="header2 nav2 navbar navbar-expand-lg navbar-light bg-light" id="home">
+        <a class="navbar-brand px-4 fw-bold fs-3" href="#home">Kyle's Portfolio</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse mx-auto" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#projects">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Contact</a>
+                </li>
             </ul>
-            <div class="hamburger" id="hamburger">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-            <div class="butn">
+            
+            <div class="butn mx-4">
                 <a href="#contact">
                     Contact me
                 </a>
             </div>
-        </header>
-    </nav>
+        </div>
+    </header>
+    <!-- Navigation -->
+
+    <!-- main content -->
     <main>
+        <!-- home -->
         <section class="intro" id="home">
             <div class=" text-center d-flex intro">
                 <img class="imgs" src="../project1/images/imageq.jpg" alt="images">
@@ -81,28 +89,47 @@
                         web applications that not only look great but also provide an excellent user experience.
                     </p>
 
-                    <!-- <div class="icon ">
+                    <div class="icon ">
                         <i class="bi bi-filetype-html icon_lang"></i>
                         <i class="bi bi-filetype-css icon_lang"></i>
                         <i class="bi bi-filetype-js icon_lang"></i>
                         <i class="bi bi-filetype-py icon_lang"></i>
-                    </div> -->
+                    </div>
+                    <div class="icon ">
+                        <i class="fa-brands fa-square-github"></i>
+                        <i class="fa-brands fa-facebook"></i>
+                        <i class="fa-brands fa-free-code-camp"></i>
+                        <i class="fa-brands fa-instagram"></i>
+                        <i class="fa-brands fa-linkedin"></i>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- skills -->
         <section id="skills">
             <h2 class="fs-1 text-center py-3 name">
                 Skills
             </h2>
-            <div class="grid text-center d-flex">
-
-            </div>
-            <div class="links">
-
-            </div>
+            <div class="container text-center py-3">
+                <div class="row gap-3 border-3 mx-auto">
+                  <div class="col col-sm-6 col-md-4 col-lg-3 mx-auto bg-dark text-light p-2 rounded-2">
+                    HTML
+                  </div>
+                  <div class="col col-sm-6 col-md-4 col-lg-3 mx-auto bg-dark text-light p-2 rounded-2  ">
+                    CSS
+                  </div>
+                  <div class="col col-sm-6 col-md-4 col-lg-3 mx-auto bg-dark text-light p-2 rounded-2  ">
+                    Tailwindcss
+                  </div>
+                  <div class="col col-sm-6 col-md-4 col-lg-3 mx-auto bg-dark text-light p-2 rounded-2  ">
+                    JS
+                  </div>
+                </div>
+              </div>
         </section>
 
+        <!-- projects -->
         <section class="project bg-black p-5" id="projects">
             <h2 class="fs-1 text-center py-3 name">
                 Project
@@ -194,7 +221,7 @@
                             <img src="../project1/images/imageq.jpg" class="card-img-top" alt="images">
                             <div class="card-body">
                                 <h5 class="card-title text-center">
-                                    Project 3
+                                    Project 3: Recipe Page
                                 </h5>
                                 <p class="description text-wrap">
                                     Developed a fullstack application that displays recipes for users to search.
@@ -238,7 +265,7 @@
                             <img src="../project1/images/imageq.jpg" class="card-img-top img-fluid" alt="images">
                             <div class="card-body">
                                 <h5 class="card-title text-center">
-                                    Project 4
+                                    Project 4: The Bike Shop
                                 </h5>
                                 <p class="description text-wrap">
                                     Used React.js to dynamically render the bicycle information and be able to filter
@@ -280,6 +307,7 @@
             </div>
         </section>
 
+        <!-- contact -->
         <section class="contact bg-success p-5 " id="contact">
             <h2 class="fs-1 text-center py-3 name ">
                 Contact Me
@@ -288,8 +316,8 @@
                 <div class="row">
                     <div class="col">
                         <h3 class="text-center">Get in Touch</h3>
-                        <p class="text-center">Feel free to reach out to me via <a class="text-light link-offset-2-hover"
-                                href="emailto:kyleparsotan@gmail.com">Email</a>
+                        <p class="text-center">Feel free to reach out to me via <a
+                                class="text-light link-offset-2-hover" href="emailto:kyleparsotan@gmail.com">Email</a>
                             or connect with me on <a class="text-black link-offset-2-hover"
                                 href="https://www.linkedin.com/in/kyle-parsotan">LinkedIn</a>.
                         </p>
@@ -307,8 +335,9 @@
     <!-- Footer -->
     <footer class="bg-dark text-light">
         <div class="footer">
-            <p class="text-center">
-                &copy; 2025 <a class="link-offset-2-hover" href="https://www.kylepprofile.com/">Kyle Parsotan</a> . All rights reserved.
+            <p class="text-center p-3">
+                &copy; 2025 <a class="link-offset-2-hover" href="https://www.kylepprofile.com/">Kyle Parsotan</a> . All
+                rights reserved.
             </p>
         </div>
     </footer>
@@ -316,6 +345,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
         crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/59a83466c3.js" crossorigin="anonymous"></script>
 
 </body>
 
