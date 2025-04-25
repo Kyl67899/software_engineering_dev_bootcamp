@@ -55,7 +55,6 @@ if day=='Saturday' or day=="Sunday" or is_holiday:
 else:
     print("It is a workday")
     
-    
 print(f"---- example 6: if statement ----")
 num = int(input("Enter a number:"))
 if (num >= 0):
@@ -80,7 +79,6 @@ if len_username >= 3:
         print(f"{username} is CAN NOT have whitespace")
 else:
     print(f"{username} is invalid. username must have 3+ characters.")
-    
     
 print(f"---- example 8: match-case condition ----")
 res_code = 404
