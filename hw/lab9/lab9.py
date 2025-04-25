@@ -17,29 +17,6 @@ For the average of ____, your GPA is _____.
 
 """
 
-# def calculate_gpa(grade1, grade2):
-#     average = (grade1 + grade2) / 2
-#     if 90 <= average <= 100:
-#         gpa = "A"
-#     elif 70 <= average <= 89.99:
-#         gpa = "B"
-#     elif 60 <= average <= 69.99:
-#         gpa = "C"
-#     elif 0 <= average <= 59.99:
-#         gpa = "FAIL!"
-#     else:
-#         gpa = "UNDEFINED!"
-#     return average, gpa
-
-# grade1 = float(input("Enter the first grade: "))
-# grade2 = float(input("Enter the second grade: "))
-
-# # Calculate the average and GPA using the function
-# average, gpa = calculate_gpa(grade1, grade2)
-
-# # Print the result
-# print(f"For the average of {average}, your GPA is {gpa}.")
-
 grade1 = float(input("Enter your first grade"))
 grade2 = float(input("Enter your second grade"))
 avgGPA = (grade1+grade2/2)
