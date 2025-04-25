@@ -36,4 +36,3 @@ match avgGPA:
         gpa = "GPA = FAIL"
         
 print(f"For the average of {avgGPA}, your GPA is {gpa}")
-
