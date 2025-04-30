@@ -1,0 +1,369 @@
+/* Custom CSS */
+:root {
+  --primary: #ff6b00;
+  --dark: #212529;
+  --light: #f8f9fa;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+}
+
+/* Navigation */
+.navbar {
+  transition: all 0.3s ease;
+  padding: 15px 0;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+.nav-link {
+  font-weight: 600;
+  margin: 0 10px;
+  position: relative;
+  color: white !important;
+}
+
+.nav-link:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  bottom: 0;
+  left: 0;
+  transition: width 0.3s;
+}
+
+.nav-link:hover:after {
+  width: 100%;
+}
+
+/* Hero Section */
+.hero {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  padding: 10px 25px;
+  font-weight: 600;
+  border-radius: 30px;
+}
+
+.btn-primary:hover {
+  background-color: #e05e00;
+  border-color: #e05e00;
+}
+
+.btn-outline-primary {
+  border-color: var(--primary);
+  color: var(--primary);
+  padding: 10px 25px;
+  font-weight: 600;
+  border-radius: 30px;
+  margin-left: 15px;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Section Styling */
+section {
+  padding: 80px 0;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-title h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.section-title h2:after {
+  content: "";
+  position: absolute;
+  width: 50%;
+  height: 3px;
+  background: var(--primary);
+  bottom: -10px;
+  left: 25%;
+}
+
+/* About Section */
+.about-img {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.feature-box {
+  margin-bottom: 30px;
+}
+
+.feature-box i {
+  color: var(--primary);
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.feature-box h4 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Programs Section */
+.program-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.program-card:hover {
+  transform: translateY(-10px);
+}
+
+.program-card img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.program-card .card-body {
+  padding: 25px;
+}
+
+.program-card .card-title {
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: var(--primary);
+}
+
+/* Trainers Section */
+.trainer-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.trainer-card:hover {
+  transform: translateY(-10px);
+}
+
+.trainer-card img {
+  height: 300px;
+  object-fit: cover;
+}
+
+.trainer-card .card-body {
+  padding: 25px;
+  text-align: center;
+}
+
+.trainer-card .card-title {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.trainer-card .card-text {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.social-icons a {
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  line-height: 35px;
+  margin: 0 5px;
+  transition: all 0.3s;
+}
+
+.social-icons a:hover {
+  background: var(--dark);
+  transform: translateY(-3px);
+}
+
+/* Testimonials Section */
+.testimonial-card {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.testimonial-card:before {
+  content: "\f10d";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 2rem;
+  color: rgba(255, 107, 0, 0.1);
+}
+
+.testimonial-card img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.testimonial-card .testimonial-name {
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.testimonial-card .testimonial-position {
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+.testimonial-card .testimonial-text {
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Contact Section */
+.contact-info {
+  margin-bottom: 30px;
+}
+
+.contact-info i {
+  font-size: 1.5rem;
+  color: var(--primary);
+  margin-right: 15px;
+}
+
+.contact-form .form-control {
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+}
+
+.contact-form .form-control:focus {
+  box-shadow: none;
+  border-color: var(--primary);
+}
+
+/* Footer */
+footer {
+  background: var(--dark);
+  color: white;
+  padding: 50px 0 20px;
+}
+
+footer h5 {
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: white;
+}
+
+footer ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+footer ul li {
+  margin-bottom: 10px;
+}
+
+footer ul li a {
+  color: #aaa;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+footer ul li a:hover {
+  color: var(--primary);
+  padding-left: 5px;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  margin-top: 40px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991px) {
+  .hero h1 {
+    font-size: 2.8rem;
+  }
+
+  .navbar-collapse {
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .section-title h2 {
+    font-size: 2rem;
+  }
+
+  .btn-outline-primary {
+    margin-left: 0;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  section {
+    padding: 60px 0;
+  }
+}
