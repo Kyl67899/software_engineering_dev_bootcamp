@@ -1,0 +1,176 @@
+/* Custom CSS */
+:root {
+  --primary: rgb(38, 38, 38);;
+  --red: rgb(255, 76, 76);;
+  --light: #f8f9fa;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+}
+
+/* Navigation */
+.navbar {
+  transition: all 0.3s ease;
+  padding: 15px 0;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+.nav-link {
+  font-weight: 600;
+  margin: 0 10px;
+  position: relative;
+  color: white !important;
+}
+
+.nav-link:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  bottom: 0;
+  left: 0;
+  transition: width 0.3s;
+}
+
+
+/* Hero Section */
+.hero {
+  background-image:
+    url("https://astraeusgym12.my.canva.site/dagme8jfm48/_assets/media/6d4eac83d269ab537664f31b93b13c43.png");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+/* .hero_box{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-left: 100px;
+} */
+
+.hero_text {
+  font-size: 70px;
+  color: var(--light);
+  font-weight: 700;
+  margin: auto;
+  text-transform: capitalize;
+  transform: translate(100px, 180px);
+}
+
+.hero_text span {
+  font-size: 4em;
+  color: var(--red);
+  margin-bottom: 30px;
+  
+}
+
+.hero_btn{
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  transform: translate(100px, 180px);
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  padding: 10px 25px;
+  font-weight: 600;
+  border-radius: 30px;
+  /* transform: scale(0.190983, 0.190983);
+  transform-origin: 0px 0px; */
+}
+
+.btn-primary:hover {
+  background-color: #e05e00;
+  border-color: #e05e00;
+}
+
+.btn-outline-primary {
+  border-color: var(--primary);
+  color: var(--primary);
+  padding: 10px 25px;
+  font-weight: 600;
+  border-radius: 30px;
+  margin-left: 15px;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+svg:hover {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+      transform: translateX(0);
+  }
+  50% {
+      transform: translateX(10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero_text {
+    font-size: 30px;
+    transform: translate(0, 0);
+  }
+
+  .hero_text span {
+    font-size: 2em;
+  }
+
+  .hero_btn {
+    transform: translate(0, 0);
+  }
+}
+
+@media (max-width: 576px) {
+  .hero_text {
+    font-size: 30px;
+    transform: translate(0, 0);
+  }
+
+  .hero_text span {
+    font-size: 2em;
+  }
+
+  .hero_btn {
+    transform: translate(0, 0);
+  }
+}
+
+/* Section Styling */
+section {
+  padding: 80px 0;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-title h1 {
+  font-size: 4em;
+  font-weight: 800;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+
