@@ -4,32 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../templates/style.css">
-    <title>{%block content%}Lab 13{%end block%}</title>
+    <title>{%block content%}Lab 13{%endblock%}</title>
 </head>
 <body>             
-    {% comment %} <h1>Welcome to Flask {{username}}</h1>
-    <img src="./pexels-fox-photography-1591597002-31829947.jpg" width="300px" />
-    <section class="maincontainer">
-        <ul>
-            {%for eachfruit in listfruits%} 
-            <li>{{eachfruit}}</li>
-            {% endfor %}
-        </ul>
+    
+    <h2>HTTP Post</h2>
+    <form method="POST">
+        <input type="password" name="password" />
+        <input type="submit" placeholder="Submit" />
+    </form>
 
-        {%if "kiwi" in listfruits%}
-        <h2>Kiwi is in the list</h2>
-        {% endif %}
-
-    </section> {% endcomment %}
-
-    <header class="title">
-        Welcome to my base page
-    </header>
-    <main class="maincontainer">
-        {%block content%}{%end block%}
-    </main>
+    <h2>
+        <a href={{url_for("users")}}>Add employee</a>
     <footer class="footer">
-        <p>Copyright &copy; 2023</p>
+        <p>Copyright &copy; 2025</p>
     </footer>
 
 </body>
