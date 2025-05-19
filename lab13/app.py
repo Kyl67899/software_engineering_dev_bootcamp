@@ -32,7 +32,6 @@ class Employee(db.Model):
     employee_id = db.Column(db.String(80), unique = True, nullable = False)
     employee_name = db.Column(db.String(100), nullable = False)
 
-
 # create a object 
 """
 create object 'app' of class Flask module.

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Online Store</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">ECommerce</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+
+            <!-- Products Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="{{ url_for('products') }}"
+                id="productsDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                Products
+              </a>
+              <ul class="dropdown-menu">
+                {% for category in categories %}
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#"
+                    >{{ category.name }}</a
+                  >
+                  <ul class="dropdown-menu">
+                    {% for product in category.products %}
+                    <li>
+                      <a class="dropdown-item" href="#">{{ product.name }}</a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+
+            <!-- Cart Summary Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                href="/cart"
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="cartDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                🛒 Cart <span class="badge bg-primary" id="cart-count">0</span>
+              </a>
+              <ul class="dropdown-menu" id="cart-summary">
+                <li><span class="dropdown-item">Loading cart...</span></li>
+              </ul>
+            </li>
+
+            <!-- Show Dashboard if Logged In -->
+            {% if user_logged_in %}
+            <!-- Profile Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="profileDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                {{ user.name }}
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="/dashboard">Dashboard</a>
+                </li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item text-danger" href="/logout">Logout</a>
+                </li>
+              </ul>
+            </li>
+            {% else %}
+            <!-- Show Login & Sign Up if Not Logged In -->
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/signup">Sign Up</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <nav>
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('profile') }}">Profile</a>
+    </nav>
+    {% if current_user.role == "admin" %}
+    <a href="{{ url_for('admin_dashboard') }}">Admin Panel</a>
+    {% endif %}
+    <!-- Navbar -->
+
+    <!-- productCarousel -->
+    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        {% for product in featured_items %}
+        <div class="carousel-item {% if loop.first %}active{% endif %}">
+          <img
+            src="{{ product.image_url }}"
+            class="d-block w-100"
+            alt="{{ product.name }}"
+          />
+          <div class="carousel-caption">
+            <h5>{{ product.name }}</h5>
+            <p>${{ product.price }}</p>
+            <a href="{{ url_for('products') }}">View Items</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#productCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#productCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+
+    <!-- clothing gird -->
+    <div class="container mt-5">
+      <h2>Clothing Categories</h2>
+      <div class="row">
+        {% for product in clothing_items %}
+        <div class="col-md-3">
+          <div class="card">
+            <img
+              src="{{ product.image_url }}"
+              class="card-img-top"
+              alt="{{ product.name }}"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <a href="/clothing" class="btn btn-secondary">View More</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- clothing gird -->
+
+    <div class="container mt-5">
+      <h2>Featured Items</h2>
+      <div class="row">
+        {% for product in featured_items %}
+        <div class="col-md-4">
+          <div class="card">
+            <img
+              src="{{ product.image_url }}"
+              class="card-img-top"
+              alt="{{ product.name }}"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">${{ product.price }}</p>
+              <a
+                href="{{ url_for('product', product_id=product.id) }}"
+                class="btn btn-secondary"
+                >View Details</a
+              >
+              <button
+                id="cart-button"
+                class="btn btn-primary"
+                onclick="toggleCart()"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="container mt-5">
+      <h2>Sale Items</h2>
+      <div class="row">
+        {% for product in sale_items %}
+        <div class="col-md-4">
+          <div class="card">
+            <img
+              src="{{ product.image_url }}"
+              class="card-img-top"
+              alt="{{ product.name }}"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">${{ product.price }}</p>
+              <button
+                id="cart-button"
+                class="btn btn-primary"
+                onclick="toggleCart()"
+              >
+                Add to Cart
+              </button>
+              <a
+                href="{{ url_for('product', product_id=product.id) }}"
+                class="btn btn-secondary"
+                >View Items</a
+              >
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="bg-dark text-light p-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>Quick Links</h5>
+            <ul>
+              <li><a href="/Contact">Contact</a></li>
+              <li><a href="/policy">Policy</a></li>
+              <li><a href="/privacy">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h5>Subscribe for Coupons</h5>
+            <form>
+              <input type="email" placeholder="Enter your email" />
+              <button type="submit">Subscribe</button>
+            </form>
+          </div>
+          <div class="col-md-4">
+            <h5>Payment Methods</h5>
+            <img src="images/payment-methods.jpg" />
+            <p>123 Store Street, NY, USA</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- footer -->
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
