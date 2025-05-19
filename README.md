@@ -1,6 +1,5 @@
 # software_engineering_dev_bootcamp
 
-
 <div id="top">
 
 <!-- HEADER STYLE: CLASSIC -->
