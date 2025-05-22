@@ -1,234 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Online Store</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
-  </head>
-  <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/">LOGO</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      position: fixed;
+      background: #f8f9fa;
+  }
+  
+  .sidebar .nav-link {
+      color: #333;
+      padding: 10px;
+      font-size: 16px;
+  }
+  
+  .sidebar .nav-link:hover {
+      background: #007bff;
+      color: white;
+  }  
+  .sidebar .dropdown-toggle {
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+.sidebar .dropdown-toggle img {
+    margin-right: 10px;
+}
 
-            <!-- Products Dropdown -->
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="productsDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-              >
-                Products
-              </a>
-              <ul class="dropdown-menu">
-                {% for category in categories %}
-                <li class="dropdown-submenu">
-                  <a class="dropdown-item dropdown-toggle" href="#"
-                    >{{ category.name }}</a
-                  >
-                  <ul class="dropdown-menu">
-                    {% for product in category.products %}
-                    <li>
-                      <a class="dropdown-item" href="#">{{ product.name }}</a>
-                    </li>
-                    {% endfor %}
-                  </ul>
-                </li>
-                {% endfor %}
-              </ul>
-            </li>
+.dropdown-menu {
+    width: 100%;
+}
 
-            <!-- Cart Summary Dropdown -->
-            <li class="nav-item dropdown">
-              <a
-                href="/cart"
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="cartDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-              >
-                🛒 Cart <span class="badge bg-primary" id="cart-count">0</span>
-              </a>
-              <ul class="dropdown-menu" id="cart-summary">
-                <li><span class="dropdown-item">Loading cart...</span></li>
-              </ul>
-            </li>
+  </style>
+  <title>User Dashboard</title>
+</head>
+<body>
 
-            <!-- Show Dashboard if Logged In -->
-            {% if user_logged_in %}
-            <!-- Profile Dropdown -->
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="profileDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-              >
-                {{ user.name }}
-              </a>
-              <ul class="dropdown-menu">
-                <li>
-                  <a class="dropdown-item" href="/dashboard">Dashboard</a>
-                </li>
-                <li><a class="dropdown-item" href="/profile">Profile</a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                  <a class="dropdown-item text-danger" href="/logout">Logout</a>
-                </li>
-              </ul>
-            </li>
-            {% else %}
-            <!-- Show Login & Sign Up if Not Logged In -->
-            <li class="nav-item">
-              <a class="nav-link" href="/login">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/signup">Sign Up</a>
-            </li>
-            {% endif %}
+    <!-- 🔹 Navbar -->
+    <div class="d-flex">
+      <!-- Sidebar Navbar -->
+      <div class="sidebar bg-light p-3">
+          <div class="text-center">
+              <img src="{{ user.profile_image or url_for('static', filename='default_profile.jpg') }}" 
+                   class="rounded-circle" width="80">
+              <h4>{{ user.fname }}</h4>
+          </div>
+          <hr>
+          <ul class="nav flex-column">
+              <li class="nav-item"><a class="nav-link" href="/">🏠 Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="/wishlist">❤️ Wishlist</a></li>
+              <li class="nav-item"><a class="nav-link" href="/settings">⚙️ Settings</a></li>
+              <li class="nav-item"><a class="nav-link" href="/contact">📩 Contact Us</a></li>
+              <li class="nav-item"><a class="nav-link text-danger" href="/logout">🚪 Logout</a></li>
           </ul>
-        </div>
       </div>
-    </nav>
-    <!-- Navbar -->
 
-    <div class="container mt-4">
-      <h2>My Purchases</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Date Purchased</th>
-            <th>Amount Paid</th>
-            <th>Review</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for order in purchased_items %}
-          <tr>
-            <td>{{ order.product.name }}</td>
-            <td>{{ order.purchase_date }}</td>
-            <td>${{ order.total_price }}</td>
-            <td>
-              {% if order.can_review %}
-              <a
-                href="{{ url_for('review', product_id=order.product.id) }}"
-                class="btn btn-outline-secondary"
-                >Write Review</a
-              >
-              {% else %}
-              <span class="text-muted">Review opens in 24 hours</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-
-    <h3>Leave a Review</h3>
-<form action="/review/{{ product.id }}" method="POST">
-    <input type="text" name="title" placeholder="Review Title" required>
-    <textarea name="description" placeholder="Write your review..." required></textarea>
-    <input type="number" name="rating" min="1" max="5" required>
-    <button type="submit">Submit Review</button>
-</form>
-
-
-    <!-- if after 24 hours of purchase then show else no purchase no review -->
-    <div class="container mt-4">
-      <h2>Review {{ product.name }}</h2>
-      <form method="POST">
-        <label>Title</label>
-        <input type="text" name="title" class="form-control" required />
-
-        <label>Description</label>
-        <textarea name="description" class="form-control" required></textarea>
-
-        <label>Rating</label>
-        <select name="rating" class="form-control">
-          <option value="5">★★★★★ (5 Stars)</option>
-          <option value="4">★★★★☆ (4 Stars)</option>
-          <option value="3">★★★☆☆ (3 Stars)</option>
-          <option value="2">★★☆☆☆ (2 Stars)</option>
-          <option value="1">★☆☆☆☆ (1 Star)</option>
-        </select>
-
-        <label>Upload Image</label>
-        <input
-          type="text"
-          name="image_url"
-          class="form-control"
-          placeholder="Image URL"
-        />
-
-        <label>Upload Video</label>
-        <input
-          type="text"
-          name="video_url"
-          class="form-control"
-          placeholder="Video URL"
-        />
-
-        <button type="submit" class="btn btn-primary mt-3">
-          Submit Review
-        </button>
-      </form>
-    </div>
-
-    <!-- footer -->
-    <footer class="bg-dark text-light p-4">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4">
-            <h5>Quick Links</h5>
-            <ul>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Contact</a></li>
-              <li><a href="#">Privacy Policy</a></li>
+      <div class="d-flex">
+        <!-- Sidebar Navbar -->
+        <div class="sidebar bg-light p-3">
+            <div class="text-center">
+                <!-- 🔹 User Profile Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ user.profile_image or url_for('static', filename='default_profile.jpg') }}" 
+                             class="rounded-circle" width="40">
+                        {{ user.username }}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/profile">👤 View Profile</a></li>
+                        <li><a class="dropdown-item" href="/settings">⚙️ Settings</a></li>
+                        <li><a class="dropdown-item text-danger" href="/logout">🚪 Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <ul class="nav flex-column">
+              <li class="nav-item"><a class="nav-link" href="/">🏠 Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="/wishlist">❤️ Wishlist</a></li>
+              <li class="nav-item"><a class="nav-link" href="/contact">📩 Contact Us</a></li>
+              <li class="nav-item"><a class="nav-link" href="/settings">⚙️ Settings</a></li>
+              <li class="nav-item"><a class="nav-link text-danger" href="/logout">🚪 Logout</a></li>
             </ul>
-          </div>
-          <div class="col-md-4">
-            <h5>Subscribe for Coupons</h5>
-            <form>
-              <input type="email" placeholder="Enter your email" />
-              <button type="submit">Subscribe</button>
-            </form>
-          </div>
-          <div class="col-md-4">
-            <h5>Payment Methods</h5>
-            <img src="images/payment-methods.jpg" />
-            <p>123 Store Street, NY, USA</p>
-          </div>
         </div>
+    
+        
+    </div>
+    
+  
+      <!-- Main Content Area -->
+      <div class="container mt-4">
+          <h2>Welcome, {{ user.fname }}!</h2>
+          <p>Your dashboard provides access to your orders, wishlist, settings, and more.</p>
       </div>
-    </footer>
-    <!-- footer -->
+  </div>
+  
+
+    <div class="container mt-5">
+        <!-- 🔹 User Info Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4>Your Information</h4>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Address:</strong> {{ user.address or 'Not Provided' }}</p>
+                <p><strong>Billing Address:</strong> {{ user.billing_address or 'Not Provided' }}</p>
+                <p><strong>Credit Card:</strong> {{ user.credit_card or 'Not Provided' }}</p>
+                
+                <!-- Verify Email Button -->
+                {% if not user.verified %}
+                <button class="btn btn-warning">Verify Email</button>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 🔹 Wishlist Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4>Your Wishlist</h4>
+                <div class="row">
+                    {% for item in wishlist_items %}
+                    <div class="col-md-3">
+                        <img src="{{ item.image_url }}" class="img-fluid">
+                        <p>{{ item.name }}</p>
+                        <a href="/product/{{ item.id }}" class="btn btn-primary btn-sm">View</a>
+                        <button class="btn btn-danger btn-sm">Remove</button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 🔹 Viewed Items -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4>Recently Viewed Items</h4>
+                <div class="row">
+                    {% for item in viewed_items %}
+                    <div class="col-md-3">
+                        <img src="{{ item.image_url }}" class="img-fluid">
+                        <p>{{ item.name }}</p>
+                        <a href="/product/{{ item.id }}" class="btn btn-primary btn-sm">View</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 🔹 Review & Engagement -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4>Review Purchased Items</h4>
+                <div class="row">
+                    {% for purchase in user.purchases %}
+                    <div class="col-md-3">
+                        <img src="{{ purchase.product.image_url }}" class="img-fluid">
+                        <p>{{ purchase.product.name }}</p>
+                        <button class="btn btn-success btn-sm">Like</button>
+                        <button class="btn btn-info btn-sm">Share</button>
+                        <a href="/review/{{ purchase.product.id }}" class="btn btn-warning btn-sm">Review</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+
+</body>
 </html>
