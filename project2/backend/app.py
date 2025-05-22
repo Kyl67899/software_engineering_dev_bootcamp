@@ -82,7 +82,7 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, default=0)
     image_url = db.Column(db.String(255))
-    featured = db.Column(db.Boolean, default=False)
+    featured = db.Column(db.Boolean, default=False)  # ✅ Ensure featured column exists
     discount = db.Column(db.Float, default=0.0)
 
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=False)  # ✅ Adds foreign key
@@ -148,23 +148,32 @@ class Message(db.Model):
 @app.route("/")
 def home():
     try:
-        # ✅ Fetch products from the database
+        # ✅ Fetch products and categories from the database
         featured_products = Product.query.filter_by(featured=True).limit(6).all()
-        sale_products = Product.query.filter(Product.discount > 0).limit(6).all()
-        categories = Category.query.all()
-        new_items = Product.query.order_by(Product.id.desc()).limit(6).all()  # ✅ Fetch latest products
+        # sale_products = Product.query.filter(Product.discount > 0).limit(6).all()
+        # categories = Category.query.all()
 
-        return render_template("index.html",
-                               featured_products=featured_products,
-                               sale_products=sale_products,
-                               categories=categories,
-                               new_items=new_items)
+        if not featured_products:
+            flash("No featured products found!", "warning")
+        
+        # if not sale_products:
+        #     flash("No sale products available!", "warning")
+        
+        # if not categories:
+        #     flash("No categories available!", "warning")
+
+        return render_template(
+            "index.html",
+            featured_products=featured_products,
+            # sale_products=sale_products,
+            # categories=categories
+        )
 
     except Exception as e:
-        db.session.rollback()  # ✅ Prevents database issues
+        db.session.rollback()  # ✅ Rolls back the database transaction if needed
         app.logger.error(f"Error loading home page: {str(e)}") 
         flash("Something went wrong. Please try again later.", "danger") 
-        return render_template("error.html")
+        return render_template("error.html", error_message=str(e))
 
 # error route
 @app.route("/error")
