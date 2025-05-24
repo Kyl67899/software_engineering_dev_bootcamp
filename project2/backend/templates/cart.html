@@ -148,15 +148,16 @@
       </div>
       {% endif %} {% endwith %}
 
-      <table class="table">
+      <table class="table table-responsive">
         <thead>
           <tr>
             {% for header in headers %}
             <th>{{ header }}</th>
-            <!-- ✅ Dynamically inserts headers -->
+            <!-- ✅ Dynamically inserts table headers -->
             {% endfor %}
           </tr>
         </thead>
+
         <tbody>
           {% for item_id, item in cart.items() %}
           <tr>
@@ -166,24 +167,20 @@
                 <input
                   type="number"
                   name="quantity"
-                  class="form-control w-50"
                   value="{{ item['quantity'] }}"
                   min="1"
                 />
-                <button type="submit" class="btn btn-primary btn-sm d-flex">
-                  Update
-                </button>
+                <button type="submit">Update</button>
               </form>
             </td>
             <td>${{ "%.2f"|format(item["original_price"]) }}</td>
+            {% if item["discount"] and item["discount"]|float > 0 %}
             <td>
-              {% if item["discount"] and item["discount"] > 0 %}
               <strong class="text-danger"
-                >${{ "%.2f"|format(item["discount"]) }}</strong
+                >${{ "%.2f"|format(item["final_price"]) }}</strong
               >
-              {% else %} ${{ "%.2f"|format(item["original_price"]) }} {% endif
-              %}
             </td>
+            {% endif %}
             <td>
               <form method="POST" action="/remove_from_cart/{{ item_id }}">
                 <button type="submit" class="btn btn-danger btn-sm">
@@ -282,7 +279,7 @@
       crossorigin="anonymous"
     ></script>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="/static/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

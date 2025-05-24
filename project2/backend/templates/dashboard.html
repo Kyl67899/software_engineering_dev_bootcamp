@@ -160,7 +160,10 @@
 
       <!-- Main Content Area -->
       <div class="container mt-4">
-        <h2>Welcome, {{ user.fname }}!</h2>
+        {% if current_user.is_authenticated %}
+        <p>Welcome, {{ current_user.username }}</p>
+        {% endif %}
+
         <p>
           Your dashboard provides access to your orders, wishlist, settings, and
           more.
