@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <!-- Ensures proper scaling on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>E-Commerce Store</title>
     <link
       rel="stylesheet"
@@ -11,23 +14,38 @@
       href="{{ url_for('static', filename='style.css') }}"
     />
 
-    <!-- ✅ Add Custom CSS for Hover Effect -->
-<style>
-  .category-box {
-      font-size: 1.2rem; /* ✅ Increase text size */
-      text-align: center; /* ✅ Center text */
-      border-radius: 10px; /* ✅ Rounded corners */
-      transition: all 0.3s ease-in-out; /* ✅ Smooth hover effect */
-  }
-
-  .category-box:hover {
-      background-color: #343a40; /* ✅ Darken background */
-      color: white; /* ✅ Change text color */
-      transform: scale(1.05); /* ✅ Slight enlarge effect */
-  }
-</style>
+    <!-- Custom CSS for Hover Effects -->
+    <style>
+      .category-box {
+        font-size: 1.2rem; /* Increase text size */
+        text-align: center; /* Center text */
+        border-radius: 10px; /* Rounded corners */
+        transition: all 0.3s ease-in-out; /* Smooth hover effect */
+      }
+      .category-box:hover {
+        background-color: #343a40; /* Darken background on hover */
+        color: white; /* Change text color on hover */
+        transform: scale(1.05); /* Slight enlarge effect */
+      }
+      .footer-link {
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+      }
+      .footer-link:hover {
+        color: #17a2b8;
+      }
+      .admin-link {
+        opacity: 0.3;
+        transition: opacity 0.3s ease-in-out;
+      }
+      .admin-link:hover {
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
         <a class="navbar-brand" href="/">E-Shop</a>
@@ -39,7 +57,6 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             {% if current_user.is_authenticated %}
@@ -58,7 +75,6 @@
             <li class="nav-item">
               <a class="nav-link text-danger" href="/logout">🚪 Logout</a>
             </li>
-
             <!-- Profile Dropdown -->
             <li class="nav-item dropdown">
               <a
@@ -79,18 +95,20 @@
                 <li>
                   <a class="dropdown-item" href="/dashboard">Dashboard</a>
                 </li>
-                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                <li>
+                  <a class="dropdown-item" href="/profile">Profile</a>
+                </li>
                 <li><hr class="dropdown-divider" /></li>
                 <li>
                   <a class="dropdown-item text-danger" href="/logout">Logout</a>
                 </li>
               </ul>
             </li>
-
             {% else %}
-            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-
-            <!-- Products Dropdown -->
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <!-- Products Dropdown for guests -->
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"
@@ -101,28 +119,19 @@
               >
                 Products
               </a>
-            </li>
-            
               <ul class="dropdown-menu">
                 {% for category in categories %}
-                <li class="dropdown-submenu">
-                  <a class="dropdown-item dropdown-toggle" href="#"
-                    >{{ category.name }}</a
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="/products?category={{ category.name }}"
                   >
-                  <ul class="dropdown-menu">
-                    {% for product in category.products %}
-                    <li>
-                      <a class="dropdown-item" href="/product/{{ product.id }}"
-                        >{{ product.name }}</a
-                      >
-                    </li>
-                    {% endfor %}
-                  </ul>
+                    {{ category.name }}
+                  </a>
                 </li>
                 {% endfor %}
               </ul>
             </li>
-
             <!-- Cart Icon -->
             <li class="nav-item">
               <a class="nav-link" href="/cart">
@@ -132,7 +141,6 @@
                 >)
               </a>
             </li>
-
             <li class="nav-item">
               <a class="nav-link" href="/login">Login</a>
             </li>
@@ -144,21 +152,9 @@
         </div>
       </div>
     </nav>
-    <!-- Navbar -->
-    {% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-        <div class="container mt-3">
-            {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% endwith %}
+    <!-- End Navbar -->
 
-    <!-- 🔹 Hero Carousel -->
+    <!-- Hero Carousel -->
     <div
       id="carouselExampleIndicators"
       class="carousel slide"
@@ -187,18 +183,21 @@
           <img
             src="{{ url_for('static', filename='bestgaminglaptop.jpg') }}"
             class="d-block w-100"
+            alt="Banner 1"
           />
         </div>
         <div class="carousel-item">
           <img
             src="{{ url_for('static', filename='bestgaminglaptop.jpg') }}"
             class="d-block w-100"
+            alt="Banner 2"
           />
         </div>
         <div class="carousel-item">
           <img
             src="{{ url_for('static', filename='bestgaminglaptop.jpg') }}"
             class="d-block w-100"
+            alt="Banner 3"
           />
         </div>
       </div>
@@ -219,92 +218,126 @@
         <span class="carousel-control-next-icon"></span>
       </button>
     </div>
+    <!-- End Hero Carousel -->
 
+    <!-- Featured Products Section -->
     {% if featured_products %}
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Featured Products</h2>
-    <div class="row g-4"> <!-- ✅ Adds spacing between cards -->
+    <div class="container mt-4">
+      <h2 class="text-center mb-4">Featured Products</h2>
+      <div class="row g-4">
         {% for product in featured_products %}
-        <div class="col-12 col-sm-6 col-md-4"> <!-- ✅ Ensures responsiveness -->
-            <div class="card border-0 shadow-sm"> <!-- ✅ Removes hover effect -->
-                <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
-                <div class="card-body text-center">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="fw-bold">{{ product.price }}</p> <!-- ✅ Bold price -->
-                    <a href="/product/{{ product.id }}" class="btn btn-primary w-100">
-                        View Item
-                    </a>
-                    <form method="POST" action="/add_to_cart/{{ product.id }}">
-                        <button type="submit" class="btn btn-success w-100 mt-2">
-                            Add to Cart
-                        </button>
-                    </form>
-                </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="card border-0 shadow-sm">
+            <img
+              src="{{ product.image_url }}"
+              class="card-img-top"
+              alt="{{ product.name }}"
+            />
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="fw-bold">{{ product.price }}</p>
+              <a href="/product/{{ product.id }}" class="btn btn-primary w-100">
+                View Item
+              </a>
+              <form method="POST" action="/add_to_cart/{{ product.id }}">
+                <button type="submit" class="btn btn-success w-100 mt-2">
+                  Add to Cart
+                </button>
+              </form>
             </div>
+          </div>
         </div>
         {% endfor %}
+      </div>
     </div>
-</div>
-{% else %}
-<p class="text-center mt-4">No featured products available.</p>
-{% endif %}
+    {% else %}
+    <p class="text-center mt-4">No featured products available.</p>
+    {% endif %}
 
-<div class="container mt-5">
-  <h2 class="text-center mb-4">Categories</h2>
-  <div class="row g-4"> <!-- ✅ Adds spacing -->
-      {% for category in categories %}
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3"> <!-- ✅ Responsive box size -->
-          <a href="/products?category={{ category.name }}"
-             class="btn btn-outline-dark category-box w-100 py-4"> <!-- ✅ Enlarged buttons -->
-              {{ category.name }}
-          </a>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=True) %} {% if
+    messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+      <div
+        class="alert alert-{{ category }} alert-dismissible fade show"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
       </div>
       {% endfor %}
-  </div>
-</div>
+    </div>
+    {% endif %} {% endwith %}
 
-<div class="container mt-5">
-  <h2 class="text-center mb-4">On Sale - Limited Time!</h2>
-  <div class="row g-4"> <!-- ✅ Adds spacing between cards -->
-      {% for product in sale_products %}
-      <div class="col-12 col-sm-6 col-md-4"> <!-- ✅ Fully responsive layout -->
-          <div class="card border-0 shadow-sm position-relative"> <!-- ✅ Adds relative position for badge -->
-              
-              <!-- ✅ "On Sale" Badge -->
-              <span class="badge bg-danger position-absolute top-0 start-0 m-2 p-2">
-                  On Sale
-              </span>
-              
-              <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
-              <div class="card-body text-center">
-                  <h5 class="card-title">{{ product.name }}</h5>
-                  <div class="d-flex justify-content-center">
-                    <strike>${{ product.price }}</strike> 
-                    <p class="fw-bold text-danger px-2">
-                      ${{ product.discount }}
-                    </p> 
-                  <!-- ✅ Price formatting -->
-                  </div>
-                  <div class="">
-                  <a href="/product/{{ product.id }}" class="btn btn-warning w-100">View Item</a>
-                  <form method="POST" action="/add_to_cart/{{ product.id }}">
-                      <button type="submit" class="btn btn-success w-100 mt-2">Add to Cart</button>
-                  </form>
-                </div>
-              </div>
-          </div>
-      </div>
-      {% endfor %}
-  </div>
-</div>
-
-
-
+    <!-- Categories Section -->
     <div class="container mt-5">
-      <h2>Customer Reviews</h2>
-      <div class="row">
+      <h2 class="text-center mb-4">Categories</h2>
+      <div class="row g-4">
+        {% for category in categories %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <a
+            href="/products?category={{ category.name }}"
+            class="btn btn-outline-dark category-box w-100 py-4"
+          >
+            {{ category.name }}
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- On Sale Section -->
+    <div class="container mt-5">
+      <h2 class="text-center mb-4">On Sale - Limited Time!</h2>
+      <div class="row g-4">
+        {% for product in sale_products %}
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="card border-0 shadow-sm position-relative">
+            <!-- "On Sale" Badge -->
+            <span
+              class="badge bg-danger position-absolute top-0 start-0 m-2 p-2"
+            >
+              On Sale
+            </span>
+            <img
+              src="{{ product.image_url }}"
+              class="card-img-top"
+              alt="{{ product.name }}"
+            />
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <div class="d-flex justify-content-center align-items-center">
+                <strike>${{ product.price }}</strike>
+                <p class="fw-bold text-danger px-2 mb-0">
+                  ${{ product.discount }}
+                </p>
+              </div>
+              <a href="/product/{{ product.id }}" class="btn btn-warning w-100">
+                View Item
+              </a>
+              <form method="POST" action="/add_to_cart/{{ product.id }}">
+                <button type="submit" class="btn btn-success w-100 mt-2">
+                  Add to Cart
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Customer Reviews Section -->
+    <div class="container mt-5">
+      <h2 class="text-center">Customer Reviews</h2>
+      <div class="row g-4">
         {% for review in reviews %}
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">{{ review.title }}</h5>
@@ -321,74 +354,80 @@
       </div>
     </div>
 
-    <!-- footer -->
+    <!-- Footer -->
     <footer class="footer bg-dark text-light py-4 mt-5">
       <div class="container">
-          <div class="row g-4 text-center text-md-start"> <!-- ✅ Responsive spacing -->
-              
-              <!-- 🔹 Quick Links -->
-              <div class="col-12 col-md-3">
-                  <h5>Quick Links</h5>
-                  <ul class="list-unstyled">
-                      <li><a href="/" class="footer-link">Home</a></li>
-                      <li><a href="/products" class="footer-link">Products</a></li>
-                      <li><a href="/contact" class="footer-link">Contact Us</a></li>
-                      <li><a href="/subscribe" class="footer-link">Subscribe</a></li>
-                  </ul>
-              </div>
-  
-              <!-- 🔹 Social Media Links -->
-              <div class="col-12 col-md-3">
-                  <h5>Follow Us</h5>
-                  <ul class="list-unstyled">
-                      <li><a href="#" class="footer-link"><i class="fab fa-facebook"></i> Facebook</a></li>
-                      <li><a href="#" class="footer-link"><i class="fab fa-instagram"></i> Instagram</a></li>
-                      <li><a href="#" class="footer-link"><i class="fab fa-twitter"></i> Twitter</a></li>
-                  </ul>
-              </div>
-  
-              <!-- 🔹 Subscription Form -->
-              <div class="col-12 col-md-3">
-                  <h5>Subscribe</h5>
-                  <form action="/subscribe" method="POST">
-                      <div class="input-group">
-                          <input type="email" name="email" class="form-control" placeholder="Enter email">
-                          <button type="submit" class="btn btn-primary">Subscribe</button>
-                      </div>
-                  </form>
-              </div>
-  
-              <!-- 🔹 Hidden Admin Link -->
-              <div class="col-12 col-md-3">
-                  <h5>Admin</h5>
-                  <a href="/admin" class="text-muted admin-link">Admin Access</a>
-              </div>
+        <div class="row g-4 text-center text-md-start">
+          <!-- Quick Links -->
+          <div class="col-12 col-md-3">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="/" class="footer-link">Home</a>
+              </li>
+              <li>
+                <a href="/products" class="footer-link">Products</a>
+              </li>
+              <li>
+                <a href="/contact" class="footer-link">Contact Us</a>
+              </li>
+              <li>
+                <a href="/subscribe" class="footer-link">Subscribe</a>
+              </li>
+            </ul>
           </div>
+          <!-- Social Media Links -->
+          <div class="col-12 col-md-3">
+            <h5>Follow Us</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="#" class="footer-link"
+                  ><i class="fab fa-facebook"></i> Facebook</a
+                >
+              </li>
+              <li>
+                <a href="#" class="footer-link"
+                  ><i class="fab fa-instagram"></i> Instagram</a
+                >
+              </li>
+              <li>
+                <a href="#" class="footer-link"
+                  ><i class="fab fa-twitter"></i> Twitter</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Subscription Form -->
+          <div class="col-12 col-md-3">
+            <h5>Subscribe</h5>
+            <form action="/subscribe" method="POST">
+              <div class="input-group">
+                <input
+                  type="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter email"
+                />
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+              </div>
+            </form>
+          </div>
+          <!-- Hidden Admin Link -->
+          <div class="col-12 col-md-3">
+            <h5>Admin</h5>
+            <a href="/admin" class="text-muted admin-link">Admin Access</a>
+          </div>
+        </div>
       </div>
-  </footer>
-  
-  <!-- ✅ Custom Styles -->
-  <style>
-      .footer-link {
-          color: white;
-          text-decoration: none;
-          transition: color 0.3s ease-in-out;
-      }
-      .footer-link:hover {
-          color: #17a2b8; /* ✅ Highlight on hover */
-      }
-      .admin-link {
-          opacity: 0.3;
-          transition: opacity 0.3s ease-in-out;
-      }
-      .admin-link:hover {
-          opacity: 1; /* ✅ Visible on hover */
-      }
-  </style>
-  
-  <!-- ✅ FontAwesome Icons -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  
+    </footer>
+    <!-- End Footer -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FontAwesome for Icons -->
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
 
     <!-- 🔹 JavaScript for Cart Functionality -->
     <script>
@@ -416,27 +455,30 @@
       });
 
       function updateCountdown() {
-          let timers = document.querySelectorAll(".sale-timer");
-          timers.forEach(timer => {
-              let expiry = new Date(timer.getAttribute("data-expiry"));
-              let now = new Date();
-              let timeLeft = expiry - now;
-  
-              if (timeLeft > 0) {
-                  let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                  let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                  let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                  timer.innerHTML = `Sale ends in: <strong>${days}d ${hours}h ${minutes}m</strong>`;
-              } else {
-                  timer.innerHTML = "<span class='text-danger'>Sale expired!</span>";
-              }
-          });
+        let timers = document.querySelectorAll(".sale-timer");
+        timers.forEach((timer) => {
+          let expiry = new Date(timer.getAttribute("data-expiry"));
+          let now = new Date();
+          let timeLeft = expiry - now;
+
+          if (timeLeft > 0) {
+            let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            let hours = Math.floor(
+              (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            let minutes = Math.floor(
+              (timeLeft % (1000 * 60 * 60)) / (1000 * 60)
+            );
+            timer.innerHTML = `Sale ends in: <strong>${days}d ${hours}h ${minutes}m</strong>`;
+          } else {
+            timer.innerHTML = "<span class='text-danger'>Sale expired!</span>";
+          }
+        });
       }
-  
+
       setInterval(updateCountdown, 60000); // ✅ Update every 60 seconds
       updateCountdown(); // ✅ Initial load
-  </script>
-  
+    </script>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

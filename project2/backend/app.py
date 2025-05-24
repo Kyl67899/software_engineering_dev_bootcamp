@@ -4,6 +4,7 @@ May 5th, 2025
 lab 13 Flask App
 """
 
+from email import header
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -48,15 +49,15 @@ login_manager.login_view = "login"
 
 login_manager.session_protection = "strong"
 
-from flask_mail import Mail, Message
+# from flask_mail import Mail, Message
 
-app.config["MAIL_SERVER"] = "smtp.gmail.com"  # Change if using another provider
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = "your-email@gmail.com"
-app.config["MAIL_PASSWORD"] = "your-email-password"
+# app.config["MAIL_SERVER"] = "smtp.gmail.com"  # Change if using another provider
+# app.config["MAIL_PORT"] = 587
+# app.config["MAIL_USE_TLS"] = True
+# app.config["MAIL_USERNAME"] = "your-email@gmail.com"
+# app.config["MAIL_PASSWORD"] = "your-email-password"
 
-mail = Mail(app)
+# mail = Mail(app)
 
 ############ class model ############
 class User(db.Model, UserMixin):
@@ -103,7 +104,7 @@ class Product(db.Model):
     new_items = db.Column(db.Boolean, default=False)
     image_url = db.Column(db.String(255))
     featured = db.Column(db.Boolean, default=False)  # ✅ Ensure featured column exists
-    discount = db.Column(db.Float, default=0.0)
+    discount = db.Column(db.Numeric(10,2), default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # ✅ Auto timestamps new products
     
     images = db.relationship("ProductImage", back_populates="product", cascade="all, delete-orphan")  # ✅ Establishes image relationship
@@ -383,67 +384,94 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# add to cart route
+# add cart
 @app.route("/add_to_cart/<int:product_id>", methods=["POST"])
 def add_to_cart(product_id):
-    product = Product.query.get_or_404(product_id)
-    quantity = int(request.form.get("quantity", 1))
+    cart = session.get("cart", {})
+    product = Product.query.get(product_id)
 
-    if "cart" not in session:
-        session["cart"] = {}
+    if not product:
+        flash("Product not found!", "danger")
+        return redirect(url_for("home"))
 
-    cart = session["cart"]
+    # ✅ Apply sale price if a discount exists, otherwise use original price
+    final_price = float(product.price) - float(product.discount) if product.discount > 0 else float(product.price)
+    
+    
 
     if str(product_id) in cart:
-        cart[str(product_id)]["quantity"] += quantity
+        cart[str(product_id)]["quantity"] += 1
     else:
         cart[str(product_id)] = {
-            "name": product.name,
-            "price": product.price,
-            "quantity": quantity
-        }
+        "name": product.name,
+        "original_price": float(product.price),  # ✅ Ensure original price is stored
+        "discount": float(product.discount),
+        "final_price": float(product.price) - float(product.discount) if product.discount > 0 else float(product.price),
+        "quantity": 1
+    }
 
-    session["cart_count"] = sum(item["quantity"] for item in cart.values())
-    session.modified = True
+    session["cart"] = cart
+    session["cart_count"] = sum(item["quantity"] for item in cart.values())  # ✅ Updates cart count
 
-    flash(f"{product.name} added to cart!", "success")
-    return redirect(url_for("cart"))
-
-# remove item route
-@app.route("/remove_item/<int:product_id>")
-def remove_item(product_id):
-    if "cart" in session and str(product_id) in session["cart"]:
-        del session["cart"][str(product_id)]
-        session.modified = True
-
-        flash("Item has been removed from your cart.", "danger")  # ✅ Display removal message
-
+    flash("Item added to cart!", "success")
     return redirect(url_for("cart"))
 
 # update cart
-@app.route("/update_cart/<int:item_id>", methods=["POST"])
-def update_cart(item_id):
-    quantity = int(request.form.get("quantity", 1))
+@app.route("/update_quantity/<int:product_id>", methods=["POST"])
+def update_quantity(product_id):
+    cart = session.get("cart", {})
+    new_quantity = request.form.get("quantity")
 
-    if "cart" in session and str(item_id) in session["cart"]:
-        session["cart"][str(item_id)]["quantity"] = quantity
+    if str(product_id) in cart and new_quantity.isdigit():
+        cart[str(product_id)]["quantity"] = int(new_quantity)
 
-    session["cart_count"] = round(sum(item["quantity"] for item in session["cart"].values()))  # ✅ Update cart count dynamically
-    session.modified = True
+    session["cart"] = cart  # ✅ Save to session
+    flash("Cart updated!", "success")
 
-    flash("Cart updated successfully!", "success")
+    return redirect(url_for("cart"))
+
+# remove cart
+@app.route("/remove_from_cart/<int:product_id>", methods=["POST"])
+def remove_from_cart(product_id):
+    cart = session.get("cart", {})
+
+    if str(product_id) in cart:
+        del cart[str(product_id)]  # ✅ Remove item
+
+    session["cart"] = cart
+    flash("Item removed from cart!", "danger")
+
     return redirect(url_for("cart"))
 
 # cart
 @app.route("/cart")
 def cart():
     cart = session.get("cart", {})
-    subtotal = round(sum(item["price"] * item["quantity"] for item in cart.values()))
-    tax_rate = 0.08  # ✅ Example: 8% tax (Adjust based on region)
-    tax = round(subtotal * tax_rate, 2)
+    
+    headers = ["Product", "Quantity", "Price"]  # ✅ Default headers
+    if any(item["discount"] > 0 for item in cart.values()):  # ✅ Check if any item has a discount
+        headers.append("Discount Price")  # ✅ Add Discount column dynamically
+    headers.append("Actions")  # ✅ Always include Actions column
+
+    subtotal = 0
+    for item in cart.values():
+        # ✅ If the item has a discount, use the discounted price; otherwise, use the original price
+        item_price = float(item["original_price"])
+        if item["discount"] and item["discount"] > 0:
+            item_price -= float(item["discount"])  # ✅ Apply discount
+        subtotal += item_price * int(item["quantity"])  # ✅ Add to subtotal
+
+    tax = round(subtotal * 0.08, 2)
     total_price = round(subtotal + tax, 2)
 
-    return render_template("cart.html", cart=cart, subtotal=subtotal, tax=tax, total_price=total_price)
+    return render_template(
+        "cart.html",
+        cart=cart,
+        headers=headers,
+        subtotal=f"{subtotal:.2f}",
+        tax=f"{tax:.2f}",
+        total_price=f"{total_price:.2f}"
+    )
 
 # order processing route
 import random

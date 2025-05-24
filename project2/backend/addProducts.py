@@ -1,61 +1,32 @@
-### add products
-from app import db, Product
+from app import app  # Make sure to import your Flask app instance
+from app import db, Product  # Import db and your models
 
-def add_product(name, description, price, stock, category_id, image_url, featured=False):
+def add_product(name, description, price, discount, stock, new_items, image_url, featured, category_id):
     new_product = Product(
         name=name,
         description=description,
         price=price,
+        discount=discount,
         stock=stock,
-        category_id=category_id,
+        new_items= new_items,
         image_url=image_url,
-        featured=featured
+        featured=featured,
+        category_id=category_id,
     )
     db.session.add(new_product)
     db.session.commit()
-    print("Product added successfully!")
 
-# Example Usage
-add_product("16in HP high end gaming Laptop", " 16 in high end gaming laptop", 1599.99, 120, 1, 
-            "https://www.bing.com/images/search?view=detailV2&ccid=ZA7d7MoD&id=D54778CF9215536413B3C94088998A3724E6AF6D&thid=OIP.ZA7d7MoDZnMe4ao84yo53gHaFJ&mediaurl=https%3a%2f%2fcdn.oneesports.id%2fcdn-data%2fwp-content%2fuploads%2f2019%2f07%2fHPpavilionultraviolet.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.640eddecca0366731ee1aa3ce32a39de%3frik%3dba%252fmJDeKmYhAyQ%26pid%3dImgRaw%26r%3d0&exph=556&expw=800&q=hp+high+end+gaming+laptop&simid=608001326772480485&FORM=IRPRST&ck=CFDF5CED88D0E5DFC33D926D79524DB9&selectedIndex=9&itb=0", 
-            True
-           )
-
-### add products
-
-def get_products():
-    products = Product.query.all()
-    for product in products:
-        print(f"{product.id}: {product.name} - ${product.price}")
-
-# Example Usage
-get_products()
-
-def get_products_by_category(category_id):
-    products = Product.query.filter_by(category_id=category_id).all()
-    return products
-
-def update_product(product_id, new_price, new_stock):
-    product = Product.query.get(product_id)
-    if product:
-        product.price = new_price
-        product.stock = new_stock
-        db.session.commit()
-        print(f"Product {product.name} updated!")
-    else:
-        print("Product not found!")
-
-# Example Usage
-update_product(1, 1099.99, 5)
-
-def delete_product(product_id):
-    product = Product.query.get(product_id)
-    if product:
-        db.session.delete(product)
-        db.session.commit()
-        print(f"Product {product.name} deleted!")
-    else:
-        print("Product not found!")
-
-# Example Usage
-delete_product(1)
+# Wrap your code in an application context
+if __name__ == '__main__':
+    with app.app_context():
+        add_product(
+            "14 in HP high end gaming Laptop",
+            "14 in high end gaming laptop", 
+            1599.99,
+            None,
+            250,
+            True,
+            "https://www.bing.com/aclick?ld=e8WvAcuDTAR2YPCSpos8rYjDVUCUyA_KCWgZfy0K7fkdDHrFKn0ks7ntFixOt41pcEsWBruGDvuT2M9NADvAb0CMoFlmPUu_dkc-inQCN4-kIHHewA1yE_T7N6oaegdBsImZUkLfanwA2KBYVkGiV72Cn42cD_fdvlIl17mzKUTn5m72HZTHiGgO_e7AbwyMEC5UBnYw&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkFTVVMtMTQtQ29tcHV0ZXItTWljcm9zb2Z0LUVhcnBob25lcyUyZmRwJTJmQjBEVEI3Wlk4TSUyZnJlZiUzZGFzY19kZl9CMERUQjdaWThNJTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkNzk4NTIyMzAzNjUwNzQlMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2QlMjZodnRhcmdpZCUzZHBsYS00NTgzNDUxNjkzOTI3OTE2JTI2cHNjJTNkMSUyNm1zY2xraWQlM2Q5ODRmYjA5NjI3YTcxNmRlMzhhYWQ4YTc3MDBkYmE2NA&rlid=984fb09627a716de38aad8a7700dba64&ntb=1", 
+            False,
+            1
+        )
