@@ -50,8 +50,8 @@
   <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/">LOGO</a>
+      <div class="container">
+        <a class="navbar-brand" href="/">E-Shop</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -63,6 +63,49 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="/dashboard">🏠 Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cart">🛒 Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/wishlist">❤️ Wishlist</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="/logout">🚪 Logout</a>
+            </li>
+
+            <!-- Profile Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="profileDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                <img
+                  src="{{ current_user.profile_image or url_for('static', filename='default_profile.jpg') }}"
+                  class="rounded-circle"
+                  width="30"
+                />
+                {{ current_user.username }}
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="/dashboard">Dashboard</a>
+                </li>
+                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item text-danger" href="/logout">Logout</a>
+                </li>
+              </ul>
+            </li>
+
+            {% else %}
             <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
 
             <!-- Products Dropdown -->
@@ -85,7 +128,9 @@
                   <ul class="dropdown-menu">
                     {% for product in category.products %}
                     <li>
-                      <a class="dropdown-item" href="#">{{ product.name }}</a>
+                      <a class="dropdown-item" href="/product/{{ product.id }}"
+                        >{{ product.name }}</a
+                      >
                     </li>
                     {% endfor %}
                   </ul>
@@ -97,39 +142,13 @@
             <!-- Cart Icon -->
             <li class="nav-item">
               <a class="nav-link" href="/cart">
-                🛒 Cart
-                <span class="badge bg-primary"
-                  >{{ session['cart']|length }}</span
-                >
+                🛒 Cart (<span id="cart-count"
+                  >{{ session['cart_count'] if 'cart_count' in session else 0
+                  }}</span
+                >)
               </a>
             </li>
 
-            <!-- Show Dashboard if Logged In -->
-            {% if user_logged_in %}
-            <!-- Profile Dropdown -->
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="profileDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-              >
-                {{ user.name }}
-              </a>
-              <ul class="dropdown-menu">
-                <li>
-                  <a class="dropdown-item" href="/dashboard">Dashboard</a>
-                </li>
-                <li><a class="dropdown-item" href="/profile">Profile</a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                  <a class="dropdown-item text-danger" href="/logout">Logout</a>
-                </li>
-              </ul>
-            </li>
-            {% else %}
-            <!-- Show Login & Sign Up if Not Logged In -->
             <li class="nav-item">
               <a class="nav-link" href="/login">Login</a>
             </li>
@@ -142,240 +161,166 @@
       </div>
     </nav>
     <!-- Navbar -->
-    <div class="container mt-4">
-      <div class="row">
-        <form id="filter-form">
-          <label>Search Products</label>
-          <input
-            type="text"
-            name="search"
-            class="form-control"
-            placeholder="Search by name..."
-          />
 
-          <label>Min Price</label>
-          <input type="number" name="min_price" class="form-control" />
-          <label>Max Price</label>
-          <input type="number" name="max_price" class="form-control" />
+    <div class="container mt-5">
+      <h2>Products</h2>
 
-          <label>Minimum Rating</label>
-          <select name="rating" class="form-control">
-            <option value="">Any</option>
-            <option value="4">4+ Stars</option>
-            <option value="3">3+ Stars</option>
-            <option value="2">2+ Stars</option>
-          </select>
+      <!-- ✅ Filter Options -->
+      <form method="GET" action="/products">
+        <label for="category">Filter by Category:</label>
+        <select name="category">
+          <option value="">All</option>
+          {% for category in categories %}
+          <option value="{{ category.name }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
 
-          <label>Category</label>
-          <select name="category_id" class="form-control">
-            <option value="">All Categories</option>
-            {% for category in categories %}
-            <option value="{{ category.id }}">{{ category.name }}</option>
-            {% endfor %}
-          </select>
+        <label for="sale">On Sale:</label>
+        <input type="checkbox" name="sale" value="true" />
 
-          <button
-            type="button"
-            class="btn btn-primary mt-3"
-            onclick="applyFilters()"
-          >
-            Apply Filters
-          </button>
-        </form>
-        <!-- Sidebar Filters -->
-        <aside class="col-md-3">
-          <div class="card p-3">
-            <h4>Filters</h4>
-            <form method="GET" action="{{ url_for('products') }}">
-              <!-- Price Filter -->
-              <label>Min Price</label>
-              <input type="number" name="min_price" class="form-control" />
-              <label>Max Price</label>
-              <input type="number" name="max_price" class="form-control" />
+        <label for="min_price">Min Price:</label>
+        <input type="number" name="min_price" />
 
-              <!-- Rating Filter -->
-              <label>Minimum Rating</label>
-              <select name="rating" class="form-control">
-                <option value="">Any</option>
-                <option value="4">4+ Stars</option>
-                <option value="3">3+ Stars</option>
-                <option value="2">2+ Stars</option>
-              </select>
+        <label for="max_price">Max Price:</label>
+        <input type="number" name="max_price" />
 
-              <!-- Category Filter -->
-              <label>Category</label>
-              <select name="category_id" class="form-control">
-                <option value="">All Categories</option>
-                {% for category in categories %}
-                <option value="{{ category.id }}">{{ category.name }}</option>
+        <label for="rating">Minimum Rating:</label>
+        <input type="number" name="rating" step="0.1" />
+
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+      </form>
+
+      <div class="row mt-4">
+        {% for product in products %}
+        <div class="col-md-4">
+          <div class="card">
+            <img src="{{ product.image_url }}" class="card-img-top" />
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p>${{ product.price }}</p>
+              <p>Rating: {{ product.average_rating }}/5</p>
+              <a href="/product/{{ product.id }}" class="btn btn-primary"
+                >View Item</a
+              >
+              <form method="POST" action="/add_to_cart/{{ product.id }}">
+                <button type="submit" class="btn btn-success">
+                  Add to Cart
+                </button>
+              </form>
+
+              {% with messages = get_flashed_messages(with_categories=True) %}
+              {% if messages %}
+              <div class="container mt-3">
+                {% for category, message in messages %}
+                <div
+                  class="alert alert-{{ category }} alert-dismissible fade show"
+                  role="alert"
+                >
+                  {{ message }}
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                  ></button>
+                </div>
                 {% endfor %}
-              </select>
+              </div>
+              {% endif %} {% endwith %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
 
-              <button type="submit" class="btn btn-primary mt-3">
-                Apply Filters
-              </button>
+    <!-- footer -->
+    <footer class="footer bg-dark text-light py-4 mt-5">
+      <div class="container">
+        <div class="row g-4 text-center text-md-start">
+          <!-- ✅ Responsive spacing -->
+
+          <!-- 🔹 Quick Links -->
+          <div class="col-12 col-md-3">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="/" class="footer-link">Home</a></li>
+              <li><a href="/products" class="footer-link">Products</a></li>
+              <li><a href="/contact" class="footer-link">Contact Us</a></li>
+              <li><a href="/subscribe" class="footer-link">Subscribe</a></li>
+            </ul>
+          </div>
+
+          <!-- 🔹 Social Media Links -->
+          <div class="col-12 col-md-3">
+            <h5>Follow Us</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="#" class="footer-link"
+                  ><i class="fab fa-facebook"></i> Facebook</a
+                >
+              </li>
+              <li>
+                <a href="#" class="footer-link"
+                  ><i class="fab fa-instagram"></i> Instagram</a
+                >
+              </li>
+              <li>
+                <a href="#" class="footer-link"
+                  ><i class="fab fa-twitter"></i> Twitter</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- 🔹 Subscription Form -->
+          <div class="col-12 col-md-3">
+            <h5>Subscribe</h5>
+            <form action="/subscribe" method="POST">
+              <div class="input-group">
+                <input
+                  type="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter email"
+                />
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+              </div>
             </form>
           </div>
-        </aside>
 
-        <!-- Product Listing -->
-        <section class="col-md-9">
-          <div class="row">
-            {% for product in products %}
-            <div class="col-md-4">
-              <div class="card">
-                <img src="{{ product.image_url }}" class="card-img-top" />
-                <div class="card-body">
-                  <h5>{{ product.name }}</h5>
-                  <p>${{ product.price }}</p>
-                  <p>{{ product.rating }}</p>
-                  <a
-                    href="{{ url_for('product', product_id=product.id) }}"
-                    class="btn btn-secondary"
-                    >View Details</a
-                  >
-                  <button
-                    id="cart-button"
-                    class="btn btn-primary"
-                    onclick="toggleCart({{ product.id }})"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
+          <!-- 🔹 Hidden Admin Link -->
+          <div class="col-12 col-md-3">
+            <h5>Admin</h5>
+            <a href="/admin" class="text-muted admin-link">Admin Access</a>
           </div>
-        </section>
-      </div>
-    </div>
-
-    <!-- Pagination Controls -->
-    <nav>
-      <ul class="pagination justify-content-center">
-        {% if pagination.has_prev %}
-        <li class="page-item">
-          <a
-            class="page-link"
-            href="{{ url_for('products', page=pagination.prev_num) }}"
-            >Previous</a
-          >
-        </li>
-        {% endif %}
-
-        <li class="page-item active">
-          <span class="page-link">{{ pagination.page }}</span>
-        </li>
-
-        {% if pagination.has_next %}
-        <li class="page-item">
-          <a
-            class="page-link"
-            href="{{ url_for('products', page=pagination.next_num) }}"
-            >Next</a
-          >
-        </li>
-        {% endif %}
-      </ul>
-    </nav>
-
-    <div class="container mt-4">
-      <div class="row">
-        <!-- Product Image -->
-        <div class="col-md-6">
-          <img src="{{ product.image_url }}" class="img-fluid rounded" />
-        </div>
-
-        <!-- Product Details -->
-        <div class="col-md-6">
-          <h2>{{ product.name }}</h2>
-          <p>{{ product.description }}</p>
-          <p>
-            <strong>Price:</strong> $<span id="price">{{ product.price }}</span>
-          </p>
-          <p><strong>Rating:</strong>{{ product.rating }} Stars</p>
-
-          <!-- Quantity Selector -->
-          <label for="quantity">Quantity:</label>
-          <input
-            type="number"
-            id="quantity"
-            class="form-control w-25"
-            value="1"
-            min="1"
-            onchange="updateTotalPrice()"
-          />
-
-          <!-- Total Price Calculation -->
-          <p>
-            <strong>Total Price:</strong> $<span id="total-price"
-              >{{ product.price }}</span
-            >
-          </p>
-
-          <!-- Add to Cart Button -->
-          <button class="btn btn-primary" onclick="addToCart()">
-            Add to Cart
-          </button>
         </div>
       </div>
-    </div>
+    </footer>
 
-    <div class="container mt-4">
-      <h2>Reviews for {{ product.name }}</h2>
-      {% if product.reviews %} {% for review in product.reviews %}
-      <div class="card mt-3">
-        <div class="card-body">
-          <h5>{{ review.title }}</h5>
-          <p>{{ review.description }}</p>
-          <p>⭐ {{ review.rating }} Stars</p>
-          {% if review.image_url %}
-          <img src="{{ review.image_url }}" class="img-fluid" />
-          {% endif %} {% if review.video_url %}
-          <video controls class="img-fluid">
-            <source src="{{ review.video_url }}" type="video/mp4" />
-          </video>
-          {% endif %}
-          <p>👍 {{ review.likes }} Likes</p>
-          <button
-            onclick="likeReview({{ review.id }})"
-            class="btn btn-outline-primary"
-          >
-            Like
-          </button>
+    <!-- ✅ Custom Styles -->
+    <style>
+      .footer-link {
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+      }
+      .footer-link:hover {
+        color: #17a2b8; /* ✅ Highlight on hover */
+      }
+      .admin-link {
+        opacity: 0.3;
+        transition: opacity 0.3s ease-in-out;
+      }
+      .admin-link:hover {
+        opacity: 1; /* ✅ Visible on hover */
+      }
+    </style>
 
-          <!-- Reply Section -->
-          <form
-            method="POST"
-            action="{{ url_for('reply_review', review_id=review.id) }}"
-          >
-            <input
-              type="text"
-              name="message"
-              class="form-control mt-2"
-              placeholder="Write a reply..."
-              required
-            />
-            <button type="submit" class="btn btn-outline-secondary mt-2">
-              Reply
-            </button>
-          </form>
-
-          <!-- Display Replies -->
-          {% if review.replies %}
-          <div class="mt-3">
-            <h6>Replies:</h6>
-            {% for reply in review.replies %}
-            <p><strong>{{ reply.user.name }}</strong>: {{ reply.message }}</p>
-            {% endfor %}
-          </div>
-          {% endif %}
-        </div>
-      </div>
-      {% endfor %} {% else %}
-      <p>No reviews yet. Be the first to review this product!</p>
-      {% endif %}
-    </div>
+    <!-- ✅ FontAwesome Icons -->
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -103,25 +103,24 @@
             <!-- Cart Icon -->
             <li class="nav-item">
               <a class="nav-link" href="/cart">
-                🛒 Cart
-                <span class="badge bg-primary"
-                  >{{ session['cart']|length }}</span
-                >
+                🛒 Cart (<span
+                  >{{ session['cart_count'] if 'cart_count' in session else 0
+                  }}</span
+                >)
               </a>
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="/login">🔑 Login</a>
+              <a class="nav-link" href="/login">Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/signup">📝 Sign Up</a>
+              <a class="nav-link" href="/signup">Sign Up</a>
             </li>
             {% endif %}
           </ul>
         </div>
       </div>
     </nav>
-    <!-- Navbar -->
     <!-- Navbar -->
 
     <div class="container mt-5">
@@ -155,47 +154,73 @@
       </div>
     </div>
 
+    <!-- footer -->
     <footer class="footer bg-dark text-light py-4 mt-5">
-      <div class="container text-center">
-          <div class="row">
+      <div class="container">
+          <div class="row g-4 text-center text-md-start"> <!-- ✅ Responsive spacing -->
+              
               <!-- 🔹 Quick Links -->
-              <div class="col-md-3">
+              <div class="col-12 col-md-3">
                   <h5>Quick Links</h5>
                   <ul class="list-unstyled">
-                      <li><a href="/" class="text-light">Home</a></li>
-                      <li><a href="/products" class="text-light">Products</a></li>
-                      <li><a href="/contact" class="text-light">Contact Us</a></li>
-                      <li><a href="/subscribe" class="text-light">Subscribe</a></li>
+                      <li><a href="/" class="footer-link">Home</a></li>
+                      <li><a href="/products" class="footer-link">Products</a></li>
+                      <li><a href="/contact" class="footer-link">Contact Us</a></li>
+                      <li><a href="/subscribe" class="footer-link">Subscribe</a></li>
                   </ul>
               </div>
   
               <!-- 🔹 Social Media Links -->
-              <div class="col-md-3">
+              <div class="col-12 col-md-3">
                   <h5>Follow Us</h5>
                   <ul class="list-unstyled">
-                      <li><a href="#" class="text-light">📘 Facebook</a></li>
-                      <li><a href="#" class="text-light">📷 Instagram</a></li>
-                      <li><a href="#" class="text-light">🐦 Twitter</a></li>
+                      <li><a href="#" class="footer-link"><i class="fab fa-facebook"></i> Facebook</a></li>
+                      <li><a href="#" class="footer-link"><i class="fab fa-instagram"></i> Instagram</a></li>
+                      <li><a href="#" class="footer-link"><i class="fab fa-twitter"></i> Twitter</a></li>
                   </ul>
               </div>
   
               <!-- 🔹 Subscription Form -->
-              <div class="col-md-3">
+              <div class="col-12 col-md-3">
                   <h5>Subscribe</h5>
                   <form action="/subscribe" method="POST">
-                      <input type="email" name="email" class="form-control mb-2" placeholder="Enter your email">
-                      <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+                      <div class="input-group">
+                          <input type="email" name="email" class="form-control" placeholder="Enter email">
+                          <button type="submit" class="btn btn-primary">Subscribe</button>
+                      </div>
                   </form>
               </div>
   
               <!-- 🔹 Hidden Admin Link -->
-              <div class="col-md-3">
+              <div class="col-12 col-md-3">
                   <h5>Admin</h5>
-                  <a href="/admin-panel" class="text-muted" style="opacity: 0.3;">Admin Access</a>
+                  <a href="/admin" class="text-muted admin-link">Admin Access</a>
               </div>
           </div>
       </div>
   </footer>
+  
+  <!-- ✅ Custom Styles -->
+  <style>
+      .footer-link {
+          color: white;
+          text-decoration: none;
+          transition: color 0.3s ease-in-out;
+      }
+      .footer-link:hover {
+          color: #17a2b8; /* ✅ Highlight on hover */
+      }
+      .admin-link {
+          opacity: 0.3;
+          transition: opacity 0.3s ease-in-out;
+      }
+      .admin-link:hover {
+          opacity: 1; /* ✅ Visible on hover */
+      }
+  </style>
+  
+  <!-- ✅ FontAwesome Icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>

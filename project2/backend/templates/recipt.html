@@ -138,28 +138,53 @@
     </p>
 
     <!-- footer -->
-    <footer class="bg-dark text-light p-4">
-      <div class="container">
+    <!-- footer -->
+    <footer class="footer bg-dark text-light py-4 mt-5">
+      <div class="container text-center">
         <div class="row">
-          <div class="col-md-4">
+          <!-- 🔹 Quick Links -->
+          <div class="col-md-3">
             <h5>Quick Links</h5>
-            <ul>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Contact</a></li>
-              <li><a href="#">Privacy Policy</a></li>
+            <ul class="list-unstyled">
+              <li><a href="/" class="text-light">Home</a></li>
+              <li><a href="/products" class="text-light">Products</a></li>
+              <li><a href="/contact" class="text-light">Contact Us</a></li>
+              <li><a href="/subscribe" class="text-light">Subscribe</a></li>
             </ul>
           </div>
-          <div class="col-md-4">
-            <h5>Subscribe for Coupons</h5>
-            <form>
-              <input type="email" placeholder="Enter your email" />
-              <button type="submit">Subscribe</button>
+
+          <!-- 🔹 Social Media Links -->
+          <div class="col-md-3">
+            <h5>Follow Us</h5>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-light">📘 Facebook</a></li>
+              <li><a href="#" class="text-light">📷 Instagram</a></li>
+              <li><a href="#" class="text-light">🐦 Twitter</a></li>
+            </ul>
+          </div>
+
+          <!-- 🔹 Subscription Form -->
+          <div class="col-md-3">
+            <h5>Subscribe</h5>
+            <form action="/subscribe" method="POST">
+              <input
+                type="email"
+                name="email"
+                class="form-control mb-2"
+                placeholder="Enter your email"
+              />
+              <button type="submit" class="btn btn-primary btn-sm">
+                Subscribe
+              </button>
             </form>
           </div>
-          <div class="col-md-4">
-            <h5>Payment Methods</h5>
-            <img src="images/payment-methods.jpg" />
-            <p>123 Store Street, NY, USA</p>
+
+          <!-- 🔹 Hidden Admin Link -->
+          <div class="col-md-3">
+            <h5>Admin</h5>
+            <a href="/admin" class="text-muted" style="opacity: 0.3"
+              >Admin Access</a
+            >
           </div>
         </div>
       </div>

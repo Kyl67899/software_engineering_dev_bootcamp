@@ -132,7 +132,9 @@
               <ul class="dropdown-menu">
                 {% for category in categories %}
                 <li class="dropdown-submenu">
-                  <a class="dropdown-item dropdown-toggle" href="#"
+                  <a
+                    class="dropdown-item dropdown-toggle"
+                    href="/products?category={{ category.name }}"
                     >{{ category.name }}</a
                   >
                   <ul class="dropdown-menu">
@@ -152,18 +154,18 @@
             <!-- Cart Icon -->
             <li class="nav-item">
               <a class="nav-link" href="/cart">
-                🛒 Cart
-                <span class="badge bg-primary"
-                  >{{ session['cart']|length }}</span
-                >
+                🛒 Cart (<span
+                  >{{ session['cart_count'] if 'cart_count' in session else 0
+                  }}</span
+                >)
               </a>
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="/login">🔑 Login</a>
+              <a class="nav-link" href="/login">Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/signup">📝 Sign Up</a>
+              <a class="nav-link" href="/signup">Sign Up</a>
             </li>
             {% endif %}
           </ul>
@@ -172,137 +174,82 @@
     </nav>
     <!-- Navbar -->
 
-    <div class="container">
-      <h2>{{ product.name }}</h2>
-      <p>Price: ${{ product.price }}</p>
-      <p>Rating: ⭐ {{ product.rating }}/5</p>
-      <p>{{ product.description }}</p>
-  
-      {% if images|length > 1 %}
-      <!-- Bootstrap Carousel -->
-      <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-              {% for image in images %}
-              <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
-                  <img src="{{ image }}" class="d-block w-100">
-              </div>
+    <div class="container mt-5">
+      <h2 class="text-center">Products</h2>
+
+      <!-- ✅ Filter Options -->
+      <form method="GET" action="/products" class="mb-4 p-3 bg-light rounded">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label for="category">Category:</label>
+            <select name="category" class="form-select">
+              <option value="">All</option>
+              {% for category in categories %}
+              <option value="{{ category.name }}">{{ category.name }}</option>
               {% endfor %}
+            </select>
           </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-          </button>
-      </div>
-      {% else %}
-          <!-- Single Image -->
-          <img src="{{ images[0] }}" class="img-fluid" alt="Product Image">
-      {% endif %}
-  
-      <button class="btn btn-primary mt-3">Add to Cart</button>
-      <button class="btn btn-outline-secondary mt-3">Add to Wishlist</button>
-  
-      <h3>Recommended Items</h3>
-      <div class="row">
-          {% for item in recommended_items %}
-          <div class="col-md-3">
-              <a href="{{ url_for('product_detail', product_id=item.id) }}">
-                  <img src="{{ item.image_urls.split(',')[0] }}" class="img-fluid">
-                  <p>{{ item.name }}</p>
-              </a>
-          </div>
-          {% endfor %}
-      </div>
-  
-      <h3>Reviews</h3>
-      {% for review in reviews %}
-      <div class="border p-3 my-2">
-          <strong>{{ review.title }}</strong> ⭐ {{ review.rating }}/5
-          <p>{{ review.description }}</p>
-      </div>
-      {% endfor %}
-  </div>
-  
-
-    <div class="container mt-4">
-      <h2>Reviews for {{ product.name }}</h2>
-      {% if product.reviews %} {% for review in product.reviews %}
-      <div class="card mt-3">
-        <div class="card-body">
-          <h5>{{ review.title }}</h5>
-          <p>{{ review.description }}</p>
-          <p>{{ review.rating }} Stars</p>
-          {% if review.image_url %}
-          <img src="{{ review.image_url }}" class="img-fluid" />
-          {% endif %} {% if review.video_url %}
-          <video controls class="img-fluid">
-            <source src="{{ review.video_url }}" type="video/mp4" />
-          </video>
-          {% endif %}
-          <p>👍 {{ review.likes }} Likes</p>
-          <button
-            onclick="likeReview({{ review.id }})"
-            class="btn btn-outline-primary"
-          >
-            Like
-          </button>
-
-          <!-- Reply Section -->
-          <form
-            method="POST"
-            action="{{ url_for('reply_review', review_id=review.id) }}"
-          >
+          <div class="col-md-4">
+            <label for="sale">On Sale:</label>
             <input
-              type="text"
-              name="message"
-              class="form-control mt-2"
-              placeholder="Write a reply..."
-              required
+              type="checkbox"
+              name="sale"
+              value="true"
+              class="form-check-input"
             />
-            <button type="submit" class="btn btn-outline-secondary mt-2">
-              Reply
+          </div>
+          <div class="col-md-4">
+            <label for="min_price">Min Price:</label>
+            <input type="number" name="min_price" class="form-control" />
+          </div>
+          <div class="col-md-4">
+            <label for="max_price">Max Price:</label>
+            <input type="number" name="max_price" class="form-control" />
+          </div>
+          <div class="col-md-4">
+            <label for="rating">Minimum Rating:</label>
+            <input
+              type="number"
+              name="rating"
+              step="0.1"
+              class="form-control"
+            />
+          </div>
+          <div class="col-md-4 d-flex pt-3 justify-content-end mt-3">
+            <button type="submit" class="btn btn-primary btn-md">
+              Apply Filters
             </button>
-          </form>
+          </div>
+        </div>
+      </form>
 
-          <!-- Display Replies -->
-      <h2>{{ product.name }}</h2>
-      <p>{{ product.description }}</p>
-
-      <h3>User Reviews</h3>
-
-      {% if reviews %}
-      <ul>
-        {% for review in reviews %}
-        <li>
-          <strong>{{ review.title }}</strong> (⭐ {{ review.rating }}/5)
-          <p>{{ review.description }}</p>
-          <small>Reviewed by: {{ review.user.name }}</small>
-        </li>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p>No reviews yet. Be the first to review this product!</p>
-      {% endif %}
-    </div>
-
-    <div class="container mt-4">
-      <h2>Recommended for You</h2>
-      <div class="row">
+      <!-- ✅ Product Grid -->
+      <div class="row g-4">
         {% for product in products %}
-        <div class="col-md-4">
-          <div class="card">
-            <img src="{{ product.image_url }}" class="card-img-top" />
-            <div class="card-body">
-              <h5>{{ product.name }}</h5>
-              <p>${{ product.price }}</p>
-              <p>{{ product.rating }}</p>
+        <div class="col-12 col-sm-6 col-md-4">
+          <!-- ✅ Adjusts layout on different screens -->
+          <div class="card border-0 shadow-sm p-3">
+            <img
+              src="{{ product.image_url }}"
+              class="card-img-top"
+              alt="{{ product.name }}"
+            />
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="fw-bold">${{ product.price }}</p>
+              <p>Rating: {{ product.average_rating|round(1) }}/5</p>
+
               <a
-                href="{{ url_for('product', product_id=product.id) }}"
-                class="btn btn-secondary"
-                >View Details</a
+                href="/product/{{ product.id }}"
+                class="btn btn-primary w-50 mb-2"
+                >View Item</a
               >
-              <button onclick="toggleCart()">Toggle Cart</button>
+
+              <form method="POST" action="/add_to_cart/{{ product.id }}">
+                <button type="submit" class="btn btn-success w-50">
+                  Add to Cart
+                </button>
+              </form>
             </div>
           </div>
         </div>
@@ -310,48 +257,94 @@
       </div>
     </div>
 
+    <!-- footer -->
     <footer class="footer bg-dark text-light py-4 mt-5">
-      <div class="container text-center">
-          <div class="row">
-              <!-- 🔹 Quick Links -->
-              <div class="col-md-3">
-                  <h5>Quick Links</h5>
-                  <ul class="list-unstyled">
-                      <li><a href="/" class="text-light">Home</a></li>
-                      <li><a href="/products" class="text-light">Products</a></li>
-                      <li><a href="/contact" class="text-light">Contact Us</a></li>
-                      <li><a href="/subscribe" class="text-light">Subscribe</a></li>
-                  </ul>
-              </div>
-  
-              <!-- 🔹 Social Media Links -->
-              <div class="col-md-3">
-                  <h5>Follow Us</h5>
-                  <ul class="list-unstyled">
-                      <li><a href="#" class="text-light">📘 Facebook</a></li>
-                      <li><a href="#" class="text-light">📷 Instagram</a></li>
-                      <li><a href="#" class="text-light">🐦 Twitter</a></li>
-                  </ul>
-              </div>
-  
-              <!-- 🔹 Subscription Form -->
-              <div class="col-md-3">
-                  <h5>Subscribe</h5>
-                  <form action="/subscribe" method="POST">
-                      <input type="email" name="email" class="form-control mb-2" placeholder="Enter your email">
-                      <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
-                  </form>
-              </div>
-  
-              <!-- 🔹 Hidden Admin Link -->
-              <div class="col-md-3">
-                  <h5>Admin</h5>
-                  <a href="/admin-panel" class="text-muted" style="opacity: 0.3;">Admin Access</a>
-              </div>
+      <div class="container">
+        <div class="row g-4 text-center text-md-start">
+          <!-- ✅ Responsive spacing -->
+
+          <!-- 🔹 Quick Links -->
+          <div class="col-12 col-md-3">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="/" class="footer-link">Home</a></li>
+              <li><a href="/products" class="footer-link">Products</a></li>
+              <li><a href="/contact" class="footer-link">Contact Us</a></li>
+              <li><a href="/subscribe" class="footer-link">Subscribe</a></li>
+            </ul>
           </div>
+
+          <!-- 🔹 Social Media Links -->
+          <div class="col-12 col-md-3">
+            <h5>Follow Us</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="#" class="footer-link"
+                  ><i class="fab fa-facebook"></i> Facebook</a
+                >
+              </li>
+              <li>
+                <a href="#" class="footer-link"
+                  ><i class="fab fa-instagram"></i> Instagram</a
+                >
+              </li>
+              <li>
+                <a href="#" class="footer-link"
+                  ><i class="fab fa-twitter"></i> Twitter</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- 🔹 Subscription Form -->
+          <div class="col-12 col-md-3">
+            <h5>Subscribe</h5>
+            <form action="/subscribe" method="POST">
+              <div class="input-group">
+                <input
+                  type="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter email"
+                />
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- 🔹 Hidden Admin Link -->
+          <div class="col-12 col-md-3">
+            <h5>Admin</h5>
+            <a href="/admin" class="text-muted admin-link">Admin Access</a>
+          </div>
+        </div>
       </div>
-  </footer>
-  
+    </footer>
+
+    <!-- ✅ Custom Styles -->
+    <style>
+      .footer-link {
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+      }
+      .footer-link:hover {
+        color: #17a2b8; /* ✅ Highlight on hover */
+      }
+      .admin-link {
+        opacity: 0.3;
+        transition: opacity 0.3s ease-in-out;
+      }
+      .admin-link:hover {
+        opacity: 1; /* ✅ Visible on hover */
+      }
+    </style>
+
+    <!-- ✅ FontAwesome Icons -->
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

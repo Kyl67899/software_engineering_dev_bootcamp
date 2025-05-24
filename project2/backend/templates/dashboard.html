@@ -1,178 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    .sidebar {
-      width: 250px;
-      height: 100vh;
-      position: fixed;
-      background: #f8f9fa;
-  }
-  
-  .sidebar .nav-link {
-      color: #333;
-      padding: 10px;
-      font-size: 16px;
-  }
-  
-  .sidebar .nav-link:hover {
-      background: #007bff;
-      color: white;
-  }  
-  .sidebar .dropdown-toggle {
-    width: 100%;
-    text-align: left;
-    font-size: 16px;
-    color: #333;
-    display: flex;
-    align-items: center;
-}
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <style>
+      .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        background: #f8f9fa;
+      }
 
-.sidebar .dropdown-toggle img {
-    margin-right: 10px;
-}
+      .sidebar .nav-link {
+        color: #333;
+        padding: 10px;
+        font-size: 16px;
+      }
 
-.dropdown-menu {
-    width: 100%;
-}
+      .sidebar .nav-link:hover {
+        background: #007bff;
+        color: white;
+      }
+      .sidebar .dropdown-toggle {
+        width: 100%;
+        text-align: left;
+        font-size: 16px;
+        color: #333;
+        display: flex;
+        align-items: center;
+      }
 
-  </style>
-  <title>User Dashboard</title>
-</head>
-<body>
+      .sidebar .dropdown-toggle img {
+        margin-right: 10px;
+      }
 
+      .dropdown-menu {
+        width: 100%;
+      }
+    </style>
+    <title>User Dashboard</title>
+  </head>
+  <body>
     <!-- 🔹 Navbar -->
     <div class="d-flex">
       <!-- Sidebar Navbar -->
       <div class="sidebar bg-light p-3">
-          <div class="text-center">
-              <img src="{{ user.profile_image or url_for('static', filename='default_profile.jpg') }}" 
-                   class="rounded-circle" width="80">
-              <h4>{{ user.fname }}</h4>
-          </div>
-          <hr>
-          <ul class="nav flex-column">
-              <li class="nav-item"><a class="nav-link" href="/">🏠 Home</a></li>
-              <li class="nav-item"><a class="nav-link" href="/wishlist">❤️ Wishlist</a></li>
-              <li class="nav-item"><a class="nav-link" href="/settings">⚙️ Settings</a></li>
-              <li class="nav-item"><a class="nav-link" href="/contact">📩 Contact Us</a></li>
-              <li class="nav-item"><a class="nav-link text-danger" href="/logout">🚪 Logout</a></li>
-          </ul>
+        <div class="text-center">
+          <img
+            src="{{ user.profile_image or url_for('static', filename='default_profile.jpg') }}"
+            class="rounded-circle"
+            width="80"
+          />
+          <h4>{{ user.fname }}</h4>
+        </div>
+        <hr />
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="/">🏠 Home</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="/wishlist">❤️ Wishlist</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/settings">⚙️ Settings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">📩 Contact Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="/logout">🚪 Logout</a>
+          </li>
+        </ul>
       </div>
 
       <div class="d-flex">
         <!-- Sidebar Navbar -->
         <div class="sidebar bg-light p-3">
-            <div class="text-center">
-                <!-- 🔹 User Profile Dropdown -->
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ user.profile_image or url_for('static', filename='default_profile.jpg') }}" 
-                             class="rounded-circle" width="40">
-                        {{ user.username }}
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="/profile">👤 View Profile</a></li>
-                        <li><a class="dropdown-item" href="/settings">⚙️ Settings</a></li>
-                        <li><a class="dropdown-item text-danger" href="/logout">🚪 Logout</a></li>
-                    </ul>
-                </div>
+          <div class="text-center">
+            <!-- 🔹 User Profile Dropdown -->
+            <div class="dropdown">
+              <button
+                class="btn btn-secondary dropdown-toggle"
+                type="button"
+                id="userDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img
+                  src="{{ user.profile_image or url_for('static', filename='default_profile.jpg') }}"
+                  class="rounded-circle"
+                  width="40"
+                />
+                {{ user.username }}
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li>
+                  <a class="dropdown-item" href="/profile">👤 View Profile</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/settings">⚙️ Settings</a>
+                </li>
+                <li>
+                  <a class="dropdown-item text-danger" href="/logout"
+                    >🚪 Logout</a
+                  >
+                </li>
+              </ul>
             </div>
-            <hr>
-            <ul class="nav flex-column">
-              <li class="nav-item"><a class="nav-link" href="/">🏠 Home</a></li>
-              <li class="nav-item"><a class="nav-link" href="/wishlist">❤️ Wishlist</a></li>
-              <li class="nav-item"><a class="nav-link" href="/contact">📩 Contact Us</a></li>
-              <li class="nav-item"><a class="nav-link" href="/settings">⚙️ Settings</a></li>
-              <li class="nav-item"><a class="nav-link text-danger" href="/logout">🚪 Logout</a></li>
-            </ul>
+          </div>
+          <hr />
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="/">🏠 Home</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cart">
+                🛒 Cart (<span
+                  >{{ session['cart_count'] if 'cart_count' in session else 0
+                  }}</span
+                >)
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/wishlist">❤️ Wishlist</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact">📩 Contact Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/settings">⚙️ Settings</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="/logout">🚪 Logout</a>
+            </li>
+          </ul>
         </div>
-    
-        
-    </div>
-    
-  
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=True) %} {% if
+      messages %}
+      <div class="container mt-3">
+        {% for category, message in messages %}
+        <div
+          class="alert alert-{{ category }} alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
       <!-- Main Content Area -->
       <div class="container mt-4">
-          <h2>Welcome, {{ user.fname }}!</h2>
-          <p>Your dashboard provides access to your orders, wishlist, settings, and more.</p>
+        <h2>Welcome, {{ user.fname }}!</h2>
+        <p>
+          Your dashboard provides access to your orders, wishlist, settings, and
+          more.
+        </p>
       </div>
-  </div>
-  
-
-    <div class="container mt-5">
-        <!-- 🔹 User Info Section -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h4>Your Information</h4>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Address:</strong> {{ user.address or 'Not Provided' }}</p>
-                <p><strong>Billing Address:</strong> {{ user.billing_address or 'Not Provided' }}</p>
-                <p><strong>Credit Card:</strong> {{ user.credit_card or 'Not Provided' }}</p>
-                
-                <!-- Verify Email Button -->
-                {% if not user.verified %}
-                <button class="btn btn-warning">Verify Email</button>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- 🔹 Wishlist Section -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h4>Your Wishlist</h4>
-                <div class="row">
-                    {% for item in wishlist_items %}
-                    <div class="col-md-3">
-                        <img src="{{ item.image_url }}" class="img-fluid">
-                        <p>{{ item.name }}</p>
-                        <a href="/product/{{ item.id }}" class="btn btn-primary btn-sm">View</a>
-                        <button class="btn btn-danger btn-sm">Remove</button>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-
-        <!-- 🔹 Viewed Items -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h4>Recently Viewed Items</h4>
-                <div class="row">
-                    {% for item in viewed_items %}
-                    <div class="col-md-3">
-                        <img src="{{ item.image_url }}" class="img-fluid">
-                        <p>{{ item.name }}</p>
-                        <a href="/product/{{ item.id }}" class="btn btn-primary btn-sm">View</a>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-
-        <!-- 🔹 Review & Engagement -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h4>Review Purchased Items</h4>
-                <div class="row">
-                    {% for purchase in user.purchases %}
-                    <div class="col-md-3">
-                        <img src="{{ purchase.product.image_url }}" class="img-fluid">
-                        <p>{{ purchase.product.name }}</p>
-                        <button class="btn btn-success btn-sm">Like</button>
-                        <button class="btn btn-info btn-sm">Share</button>
-                        <a href="/review/{{ purchase.product.id }}" class="btn btn-warning btn-sm">Review</a>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container mt-5">
+      <!-- 🔹 User Info Section -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h4>Your Information</h4>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Address:</strong> {{ user.address or 'Not Provided' }}</p>
+          <p>
+            <strong>Billing Address:</strong> {{ user.billing_address or 'Not
+            Provided' }}
+          </p>
+          <p>
+            <strong>Credit Card:</strong> {{ user.credit_card or 'Not Provided'
+            }}
+          </p>
 
-</body>
+          <!-- Verify Email Button -->
+          {% if not user.verified %}
+          <button class="btn btn-warning">Verify Email</button>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- 🔹 Wishlist Section -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h4>Your Wishlist</h4>
+          <div class="row">
+            {% for item in wishlist_items %}
+            <div class="col-md-3">
+              <img src="{{ item.image_url }}" class="img-fluid" />
+              <p>{{ item.name }}</p>
+              <a href="/product/{{ item.id }}" class="btn btn-primary btn-sm"
+                >View</a
+              >
+              <button class="btn btn-danger btn-sm">Remove</button>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔹 Viewed Items -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h4>Recently Viewed Items</h4>
+          <div class="row">
+            {% for item in viewed_items %}
+            <div class="col-md-3">
+              <img src="{{ item.image_url }}" class="img-fluid" />
+              <p>{{ item.name }}</p>
+              <a href="/product/{{ item.id }}" class="btn btn-primary btn-sm"
+                >View</a
+              >
+              <form method="POST" action="/add_to_cart/{{ product.id }}">
+                <button type="submit" class="btn btn-success">
+                  Add to Cart
+                </button>
+              </form>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔹 Review & Engagement -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h4>Review Purchased Items</h4>
+          <div class="row">
+            {% for purchase in user.purchases %}
+            <div class="col-md-3">
+              <img src="{{ purchase.product.image_url }}" class="img-fluid" />
+              <p>{{ purchase.product.name }}</p>
+              <button class="btn btn-success btn-sm">Like</button>
+              <button class="btn btn-info btn-sm">Share</button>
+              <a
+                href="/review/{{ purchase.product.id }}"
+                class="btn btn-warning btn-sm"
+                >Review</a
+              >
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer bg-dark text-light py-4 mt-5">
+      <div class="container text-center">
+        <div class="row">
+          <!-- 🔹 Quick Links -->
+          <div class="col-md-3">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="/" class="text-light">Home</a></li>
+              <li><a href="/products" class="text-light">Products</a></li>
+              <li><a href="/contact" class="text-light">Contact Us</a></li>
+              <li><a href="/subscribe" class="text-light">Subscribe</a></li>
+            </ul>
+          </div>
+
+          <!-- 🔹 Social Media Links -->
+          <div class="col-md-3">
+            <h5>Follow Us</h5>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-light">📘 Facebook</a></li>
+              <li><a href="#" class="text-light">📷 Instagram</a></li>
+              <li><a href="#" class="text-light">🐦 Twitter</a></li>
+            </ul>
+          </div>
+
+          <!-- 🔹 Subscription Form -->
+          <div class="col-md-3">
+            <h5>Subscribe</h5>
+            <form action="/subscribe" method="POST">
+              <input
+                type="email"
+                name="email"
+                class="form-control mb-2"
+                placeholder="Enter your email"
+              />
+              <button type="submit" class="btn btn-primary btn-sm">
+                Subscribe
+              </button>
+            </form>
+          </div>
+
+          <!-- 🔹 Hidden Admin Link -->
+          <div class="col-md-3">
+            <h5>Admin</h5>
+            <a href="/admin" class="text-muted" style="opacity: 0.3"
+              >Admin Access</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
