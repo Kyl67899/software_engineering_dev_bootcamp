@@ -313,6 +313,22 @@ def logout():
     flash("You have been logged out successfully, and your session has been cleared.", "info")
     return redirect(url_for("login"))  # ✅ Redirect to login page
 
+# @app.route("/products")
+# def products():
+#     category_name = request.args.get("category")  # ✅ Get category from URL
+
+#     if category_name:
+#         category = Category.query.filter_by(name=category_name).first()
+#         if not category:
+#             flash("Category not found!", "danger")
+#             return redirect(url_for("products"))
+        
+#         products = Product.query.filter_by(category_id=category.id).all()
+#     else:
+#         products = Product.query.all()  # ✅ Show all products if no category is selected
+
+#     return render_template("products.html", category_name=category_name, products=products)
+
 @app.route("/products")
 def products():
     category_filter = request.args.get("category")  # ✅ Get category from URL query
@@ -343,6 +359,8 @@ def products():
 
     products = query.all()
     categories = Category.query.all()
+    
+    print("Categories:", categories)
 
     return render_template("products.html", products=products, categories=categories)
 
@@ -394,21 +412,18 @@ def add_to_cart(product_id):
         flash("Product not found!", "danger")
         return redirect(url_for("home"))
 
-    # ✅ Apply sale price if a discount exists, otherwise use original price
     final_price = float(product.price) - float(product.discount) if product.discount > 0 else float(product.price)
-    
-    
 
     if str(product_id) in cart:
-        cart[str(product_id)]["quantity"] += 1
+        cart[str(product_id)]["quantity"] += 1  # ✅ Increase quantity
     else:
         cart[str(product_id)] = {
-        "name": product.name,
-        "original_price": float(product.price),  # ✅ Ensure original price is stored
-        "discount": float(product.discount),
-        "final_price": float(product.price) - float(product.discount) if product.discount > 0 else float(product.price),
-        "quantity": 1
-    }
+            "name": product.name,
+            "original_price": product.price,
+            "discount": product.discount,
+            "final_price": final_price,
+            "quantity": 1
+        }
 
     session["cart"] = cart
     session["cart_count"] = sum(item["quantity"] for item in cart.values())  # ✅ Updates cart count
@@ -417,30 +432,28 @@ def add_to_cart(product_id):
     return redirect(url_for("cart"))
 
 # update cart
-@app.route("/update_quantity/<int:product_id>", methods=["POST"])
-def update_quantity(product_id):
+@app.route("/update_quantity/<int:item_id>", methods=["POST"])
+def update_quantity(item_id):
     cart = session.get("cart", {})
     new_quantity = request.form.get("quantity")
 
-    if str(product_id) in cart and new_quantity.isdigit():
-        cart[str(product_id)]["quantity"] = int(new_quantity)
+    if str(item_id) in cart and new_quantity.isdigit():
+        cart[str(item_id)]["quantity"] = int(new_quantity)
 
-    session["cart"] = cart  # ✅ Save to session
+    session["cart"] = cart
     flash("Cart updated!", "success")
-
     return redirect(url_for("cart"))
 
 # remove cart
-@app.route("/remove_from_cart/<int:product_id>", methods=["POST"])
-def remove_from_cart(product_id):
+@app.route("/remove_from_cart/<int:item_id>", methods=["POST"])
+def remove_from_cart(item_id):
     cart = session.get("cart", {})
 
-    if str(product_id) in cart:
-        del cart[str(product_id)]  # ✅ Remove item
+    if str(item_id) in cart:
+        del cart[str(item_id)]  # ✅ Remove item
 
     session["cart"] = cart
     flash("Item removed from cart!", "danger")
-
     return redirect(url_for("cart"))
 
 # cart
@@ -449,7 +462,7 @@ def cart():
     cart = session.get("cart", {})
     
     headers = ["Product", "Quantity", "Price"]  # ✅ Default headers
-    if any(item["discount"] > 0 for item in cart.values()):  # ✅ Check if any item has a discount
+    if any(float(item["discount"]) > 0 if item["discount"] else 0 for item in cart.values()):  # ✅ Check if any item has a discount
         headers.append("Discount Price")  # ✅ Add Discount column dynamically
     headers.append("Actions")  # ✅ Always include Actions column
 
@@ -457,7 +470,7 @@ def cart():
     for item in cart.values():
         # ✅ If the item has a discount, use the discounted price; otherwise, use the original price
         item_price = float(item["original_price"])
-        if item["discount"] and item["discount"] > 0:
+        if float(item["discount"]) > 0 if item["discount"] else 0:
             item_price -= float(item["discount"])  # ✅ Apply discount
         subtotal += item_price * int(item["quantity"])  # ✅ Add to subtotal
 
@@ -512,7 +525,6 @@ def contact():
         return redirect(url_for("index"))
 
     return render_template("contact.html")
-
 
 if __name__ == "__main__":
     app.run(debug=True)
