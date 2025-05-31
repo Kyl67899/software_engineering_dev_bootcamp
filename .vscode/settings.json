@@ -31,5 +31,8 @@
             "database": "postgres",
             "username": "postgres"
         }
-    ]
+    ],
+    "liveServer.settings.port": 5501,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "standard"
 }
